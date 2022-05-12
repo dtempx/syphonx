@@ -4,7 +4,9 @@
         "module": "ES2020",
         "moduleResolution": "Node",
         "allowSyntheticDefaultImports": true,
+        "removeComments": true,
         "sourceMap": true,
-        "strict": true
+        "strict": true,
+        "declaration": true
     }
 }
