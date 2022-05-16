@@ -35,7 +35,8 @@ const args = parseArgs({
         waituntil: "when to consider navigation complete: load, domcontentloaded, networkidle0, networkidle2",
         timeout: "navigation timeout in milliseconds (default=30000)",
         tag: "tags inserted data",
-        out: "specifies output as default, html, json, bigquery",
+        out: "specifies output as default, html, json",
+        insert: "specifies to insert to configured data target"
     },
     validate: args => {
         if (!args[0] && args.out !== "html" && !args.query)
@@ -204,7 +205,7 @@ if (concurrency > emitter.getMaxListeners())
             });
         }
 
-        if (args.out === "bigquery") {
+        if (args.insert) {
             const id = args.id || uuid.v4();
             await bigquery.dataset(dataset).table(table).insert([{
                 timestamp: new Date(),

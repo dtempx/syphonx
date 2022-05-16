@@ -8,7 +8,7 @@ import { prompt } from "./common/index.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const __jquery = fs.readFileSync(path.resolve(__dirname, "./node_modules/jquery/dist/jquery.min.js"), "utf8");
+const __jquery = fs.readFileSync(path.resolve(__dirname, "./node_modules/jquery/dist/jquery.slim.min.js"), "utf8");
 
 export interface FetchOptions {
     url: string;
@@ -24,6 +24,7 @@ export interface FetchOptions {
 }
 
 export interface FetchResult extends syphonx.ExtractResult {
+    status?: number;
     html?: string;
 }
 
@@ -43,6 +44,17 @@ export async function fetch(options: FetchOptions): Promise<FetchResult> {
         page = await browser.newPage();
         await page.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36");
         await page.setExtraHTTPHeaders({"Accept-Language": "en-US,en"});
+        await page.setViewport({ width: 1366, height: 768 });
+
+        let status: number|undefined = undefined;
+        await page.on("response", response => {
+            if (response.url() === options.url) {
+                status = response.status();
+                //console.log(response.url(), response.status(), response.statusText());
+            }
+            
+        });
+
         await page.goto(options.url, {
             waitUntil: options.waitUntil,
             timeout: options.timeout
@@ -72,7 +84,7 @@ export async function fetch(options: FetchOptions): Promise<FetchResult> {
             await prompt("done, hit enter to continue...");
         }
         
-        return { ...result, html };    
+        return { ...result, status, html };    
     }
     finally {
         if (page)
