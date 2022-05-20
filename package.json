@@ -1,6 +1,6 @@
 {
   "name": "syphonx",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "SyphonX is a data-driven extraction tool that runs in any browser",
   "author": "Dave Templin <dtempx@gmail.com> (https://github.com/dtempx/)",
   "license": "MIT",
@@ -9,10 +9,10 @@
   "bin": {
     "syphonx": "./command.js"
   },
-  "keywords": [],
+  "keywords": ["scrape"],
   "files": [
-    "*.js",
-    "*.d.ts"
+    "**/*.js",
+    "**/*.d.ts"
   ],
   "dependencies": {
     "@google-cloud/bigquery": "^5.11.0",
@@ -31,6 +31,7 @@
     "parse-full-name": "^1.2.6",
     "puppeteer": "^13.4.1",
     "strip-json-comments": "^4.0.0",
+    "syphonx-core": "^1.0.2",
     "tedious": "^14.3.0",
     "turndown": "^7.1.1",
     "typescript": "^4.6.2",

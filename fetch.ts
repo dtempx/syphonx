@@ -8,7 +8,7 @@ import { prompt } from "./common/index.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const __jquery = fs.readFileSync(path.resolve(__dirname, "./node_modules/jquery/dist/jquery.slim.min.js"), "utf8");
+const __jquery = fs.readFileSync(path.resolve(__dirname, "./jquery.slim.min.js"), "utf8");
 
 export interface FetchOptions {
     url: string;
