@@ -4,11 +4,11 @@ import * as cheerio from "cheerio";
 import * as syphonx from "syphonx-core";
 import * as path from "path";
 import { fileURLToPath } from "url";
-import { prompt } from "./common/index.js";
+import { default as prompt } from "./prompt.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const __jquery = fs.readFileSync(path.resolve(__dirname, "./jquery.slim.min.js"), "utf8");
+const __jquery = fs.readFileSync(path.resolve(__dirname, "../jquery.slim.min.js"), "utf8");
 
 export interface FetchOptions {
     url: string;

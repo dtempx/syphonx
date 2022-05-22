@@ -1,8 +1,10 @@
 {
   "name": "syphonx",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "SyphonX is a data-driven extraction tool that runs in any browser",
   "author": "Dave Templin <dtempx@gmail.com> (https://github.com/dtempx/)",
+  "homepage": "https://github.com/dtempx/syphonx",
+  "repository": "github:dtempx/syphonx",
   "license": "MIT",
   "main": "index.js",
   "type": "module",
