@@ -9,7 +9,24 @@
   "bin": {
     "syphonx": "./command.js"
   },
-  "keywords": ["scrape"],
+  "keywords": [
+    "scrape",
+    "scraper",
+    "crawl",
+    "crawler",
+    "spider",
+    "parse",
+    "parser",
+    "puppeteer",
+    "chrome",
+    "headless",
+    "automation",
+    "cheerio",
+    "jquery",
+    "web",
+    "html",
+    "dom"
+  ],
   "files": [
     "**/*.js",
     "**/*.d.ts"
@@ -31,7 +48,7 @@
     "parse-full-name": "^1.2.6",
     "puppeteer": "^13.4.1",
     "strip-json-comments": "^4.0.0",
-    "syphonx-core": "^1.0.2",
+    "syphonx-core": "^1.0.3",
     "tedious": "^14.3.0",
     "turndown": "^7.1.1",
     "typescript": "^4.6.2",
