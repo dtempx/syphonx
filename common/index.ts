@@ -1,7 +1,6 @@
 export * from "./args.js";
 export * from "./extract.js";
 export * from "./fetch.js";
-export * from "./html.js";
 export * from "./json.js";
 export * from "./script.js";
 export * from "./utilities.js";

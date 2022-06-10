@@ -1,0 +1,22 @@
+{
+    "url": "https://www.example.com/",
+    "actions": [
+      {
+        "select": [
+          {
+              "name": "name",
+              "$": [["h1"]]
+          },
+          {
+              "name": "description",
+              "$": [["p"]]
+          },
+          {
+              "name": "href",
+              "$": [["a",["attr","href"]]]
+          }
+        ]
+      }
+    ]
+  }
+  

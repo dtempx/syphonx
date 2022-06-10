@@ -10,8 +10,8 @@
             "name": "Launch Program",
             //"program": "${file}",
             "program": "${workspaceFolder}/command.js",
-            "args": ["Z:/work/syphonx/ikaun/scripts/ikaun/burr/person.json", "--url=https://www.burr.com/https://www.burr.com/attorney/andrea-weed-dorgan/"],
-            //"args": ["Z:\\work\\syphonx\\pricespy\\scripts\\pricespy\\samsung\\apple.json", "--url=https://www.apple.com/us-edu/shop/buy-ipad/ipad-pro/12.9-inch-display-128gb-space-gray-wifi-cellular", "--offline"],
+            "args": ["run", "test2.json", "--show"],
+            //"args": ["${workspaceFolder}/scripts/ikaun/burr/people.json", "--url=https://www.burr.com/attorney/andrea-weed-dorgan/"],
             //"console": "externalTerminal", // WORKAROUND https://stackoverflow.com/questions/41100916/node-js-readline-in-debug-console-in-visual-studio-code
             "outputCapture": "std", // WORKAROUND https://github.com/microsoft/vscode/issues/19750
             "skipFiles": ["<node_internals>/**"],
