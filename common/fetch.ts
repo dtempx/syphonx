@@ -26,6 +26,7 @@ export interface FetchOptions {
 export interface FetchResult extends syphonx.ExtractResult {
     status?: number;
     html?: string;
+    errors?: syphonx.ExtractError[];
 }
 
 export async function fetch(options: FetchOptions): Promise<FetchResult> {
@@ -83,7 +84,7 @@ export async function fetch(options: FetchOptions): Promise<FetchResult> {
         if (["after", "both", "1"].includes(options.pause!) && !options.headless) {
             await prompt("done, hit enter to continue...");
         }
-        
+
         return { ...result, status, html };    
     }
     finally {

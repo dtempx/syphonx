@@ -72,7 +72,7 @@ export default async function (args: Record<string, string>): Promise<void> {
                 timeout: parseInt(args.timeout) || script.timeout
             });
             if (result.ok || args.onerror === "insert") {
-                const id = await insert({ dataset, table, key: script.key, tag: args.tag, result });
+                const id = await insert({ dataset, table, key: script.key || "default", tag: args.tag, result });
                 succeeded += 1;
                 const t2 = new Date().valueOf();
                 console.log(`[${++i}/${rows.length}] ${id} inserted to ${dataset}.${table} (${t2 - t1}ms, ${result.ok ? "ok" : `${result.errors?.length} errors`})`);

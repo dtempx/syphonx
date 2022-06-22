@@ -765,10 +765,10 @@ stubs@^3.0.0:
   resolved "https://registry.yarnpkg.com/stubs/-/stubs-3.0.0.tgz#e8d2ba1fa9c90570303c030b6900f7d5f89abe5b"
   integrity sha1-6NK6H6nJBXAwPAMLaQD31fiavls=
 
-syphonx-core@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/syphonx-core/-/syphonx-core-1.0.3.tgz#baa908cf3703c84ac81fd67356057ad1999350af"
-  integrity sha512-BscUHaZor4ddsC4aptf2RQSjkCh1sQoY4TQpO4GYmgZDFuOPqh4qPQEK4NAvNrpqpzjR5Z1PTTPgBg88/dqXPQ==
+syphonx-core@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/syphonx-core/-/syphonx-core-1.0.7.tgz#ffa1e0782813bbcbea9433a069e9d919ef8d1744"
+  integrity sha512-ew+0JZHIiL5dj6NMfaLVVpgd618CN12EE566z73TCuIdpwHnRhVbS0dmYvtYSWb/DLR9B9yE/btER1Ersv07kA==
 
 tar-fs@2.1.1:
   version "2.1.1"

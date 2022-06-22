@@ -4,7 +4,7 @@ import { extract, fetch, loadJSON, subset, insert, FetchResult, Script } from ".
 export default async function (args: Record<string, string>): Promise<void> {
     const script: Script = args[1] ? await loadJSON(args[1]) : { actions: [] };
     const url = args.url || script.url;
-    if (!url) {
+    if (!url && !args[2]) {
         console.log("url not specified");
         process.exit(1);
     }
@@ -19,7 +19,7 @@ export default async function (args: Record<string, string>): Promise<void> {
     let result: FetchResult;
     if (!args[2]) {
         result = await fetch({
-            url,
+            url: url!,
             actions: script.actions,
             headless: !args.show,
             pause: args.pause as any,
@@ -40,7 +40,7 @@ export default async function (args: Record<string, string>): Promise<void> {
     }
 
     if (args.insert) {
-        const id = await insert({ dataset, table, key: script.key, tag: args.tag, result });
+        const id = await insert({ dataset, table, key: script.key || "default", tag: args.tag, result });
         console.log(`${id} inserted to ${dataset}.${table}`);
     }
     else if (args.out === "json") {
@@ -66,7 +66,7 @@ export default async function (args: Record<string, string>): Promise<void> {
 
             if (!result.ok) {
                 console.log();
-                console.log(`${result.errors?.length} ERRORS`);
+                console.log("ERRORS");
                 console.error(JSON.stringify(result.errors, null, 2));
             }
         }
