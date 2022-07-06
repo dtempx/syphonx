@@ -2,6 +2,7 @@ import { Action } from "syphonx-core";
 import { extract, fetch, FetchResult } from "./common/index.js";
 
 export { ExtractResult } from "syphonx-core";
+export * from "./load.js";
 
 export interface RunOptions {
     url: string;
