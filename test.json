@@ -2,6 +2,11 @@
     "url": "https://www.example.com/",
     "actions": [
       {
+        "transform": [
+          {"$": [["h1",["addClass","title"]]]}
+        ]
+      },
+      {
         "select": [
           {
               "name": "name",

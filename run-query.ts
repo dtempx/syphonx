@@ -2,7 +2,7 @@ import * as path from "path";
 import * as async from "async-parallel";
 import { BigQuery } from "@google-cloud/bigquery";
 import { EventEmitter } from "events";
-import { fetch, loadJSON, sleep, insert, tryParseJSON, Script } from "./common/index.js";
+import { loadJSON, sleep, insert, online, randomize, tryParseJSON, Script } from "./common/index.js";
 
 const bigquery = new BigQuery();
 
@@ -61,15 +61,14 @@ export default async function (args: Record<string, string>): Promise<void> {
         const { url, key, ...params } = row;
         const script = scripts[key];
         try {
-            const result = await fetch({
+            const result = await online({
                 ...script,
                 url,
                 params: { ...script.params, ...params, ...tryParseJSON(args.params, false) },
-                headless: !args.show,
-                pause: args.pause as any,
+                show: !!args.show,
+                timeout: parseInt(args.timeout) || script.timeout,
                 offline: !!args.offline,
-                waitUntil: args.waituntil || script.waitUntil as any,
-                timeout: parseInt(args.timeout) || script.timeout
+                browserOptions: {} // todo: not supported yet
             });
             if (result.ok || args.onerror === "insert") {
                 const id = await insert({ dataset, table, key: script.key || "default", tag: args.tag, result });
@@ -83,8 +82,10 @@ export default async function (args: Record<string, string>): Promise<void> {
                 console.log(`[${++i}/${rows.length}] ${url} skipped (${t2 - t1}ms)\n${result.errors?.map(error => JSON.stringify(error)).join("\n")}`);
             }
             if (args.snooze && concurrency === 1) {
-                console.log(`snoozing for ${args.snooze} seconds...`);
-                await sleep(parseInt(args.snooze) * 1000);
+                const a = args.snooze.split(",").map(value => parseInt(value));
+                const t = randomize(a[0], a[1]);
+                console.log(`snoozing for ${Math.ceil(t)} seconds...`);
+                await sleep(t * 1000);
             }
         }
         catch (err) {

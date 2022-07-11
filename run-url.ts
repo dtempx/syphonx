@@ -1,5 +1,6 @@
+import * as syphonx from "syphonx-core";
 import * as fs from "fs";
-import { extract, fetch, loadJSON, subset, insert, FetchResult, Script } from "./common/index.js";
+import { insert, loadJSON, offline, online, subset, tryParseJSON, Script } from "./common/index.js";
 
 export default async function (args: Record<string, string>): Promise<void> {
     const script: Script = args[1] ? await loadJSON(args[1]) : { actions: [] };
@@ -9,66 +10,74 @@ export default async function (args: Record<string, string>): Promise<void> {
         process.exit(1);
     }
 
+    const output = args.out ? args.out.split(",") : ["data"];
+    const debug = output.includes("log");
+    const params = { ...script.params, ...tryParseJSON(args.params, false) };
+
     const dataset = script.key ? script.key.split("/").filter(text => text.length > 0)[0] : "";
     const table = "syphonx";
-    if (!dataset && args.out === "bigquery") {
-        console.log("invalid or undefined script key required for insert");
-        process.exit(1);
-    }
 
-    let result: FetchResult;
+    let result: syphonx.ExtractResult;
     if (!args[2]) {
-        result = await fetch({
+        const pause = args.pause === "1" ? "before" : (args.pause as "before" | "after" | "both" | undefined);
+        const show = !!args.show || !!pause;
+        result = await online({
+            ...script,
             url: url!,
-            actions: script.actions,
-            headless: !args.show,
-            pause: args.pause as any,
-            offline: !!args.offline,
-            waitUntil: args.waituntil || script.waitUntil as any,
+            params,
+            show,
+            pause,
+            debug,
             timeout: parseInt(args.timeout) || script.timeout,
-            html: args.out === "html",
-            debug: !!args.debug
+            offline: !!args.offline,
+            browserOptions: {}, // todo: not supported yet
+            includeDOMRefs: false,
+            outputTransformedHTML: output.includes("html:post")
         });
     }
     else {
         const html = fs.readFileSync(args[2], "utf8");
-        result = await extract({
+        result = await offline({
+            ...script,
+            html,
             url,
-            actions: script.actions,
-            html
+            params,
+            debug,
+            includeDOMRefs: false
         });
     }
 
     if (args.insert) {
-        const id = await insert({ dataset, table, key: script.key || "default", tag: args.tag, result });
-        console.log(`${id} inserted to ${dataset}.${table}`);
-    }
-    else if (args.out === "json") {
-        console.log(JSON.stringify(result, null, 2));
+        if (result.ok || args.onerror === "insert") {
+            const id = await insert({ dataset, table, key: script.key || "default", tag: args.tag, result });
+            console.log(`${id} inserted to ${dataset}.${table}`);
+        }
     }
     else {
-        if (args.out === "html") {
-            console.log(result.html);
-        }
-
-        if (script.actions.length > 0) {
-            const data = args.filter && typeof result.data === "object" && result.data !== null ? 
-            subset(result.data as Record<string, unknown>, args.filter.split(",").map(value => value.trim())) : result.data;
-
+        if (output.includes("data")) {
+            if (args.filter)
+                result.data = subset(result.data as Record<string, unknown>, args.filter.split(",").map(value => value.trim()));
+            console.log(JSON.stringify(result.data, null, 2));
             console.log();
-            console.log(JSON.stringify({ url, domain: result.domain, data }, null, 2));
-
-            if (!!args.debug) {
-                console.log();
-                console.log("DEBUG");
+        }
+    
+        if (output.includes("log")) {
+            if (!args[2] && !args.offline)
+                console.log(`status: ${result.status}`);
+            if (result.log) {
                 console.log(result.log);
-            }
-
-            if (!result.ok) {
                 console.log();
-                console.log("ERRORS");
-                console.error(JSON.stringify(result.errors, null, 2));
             }
         }
+    
+        if (output.includes("html") || output.includes("html:post")) {
+            console.log(result.html);
+            console.log();
+        }
+    }
+
+    if (!result.ok) {
+        console.error("ERRORS");
+        console.error(JSON.stringify(result.errors, null, 2));
     }
 }
