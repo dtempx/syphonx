@@ -770,10 +770,10 @@ stubs@^3.0.0:
   resolved "https://registry.yarnpkg.com/stubs/-/stubs-3.0.0.tgz#e8d2ba1fa9c90570303c030b6900f7d5f89abe5b"
   integrity sha1-6NK6H6nJBXAwPAMLaQD31fiavls=
 
-syphonx-core@^1.0.11:
-  version "1.0.11"
-  resolved "https://registry.yarnpkg.com/syphonx-core/-/syphonx-core-1.0.11.tgz#3f8769c1add4e5961bec1eedfc2f4b8fd09bf0fc"
-  integrity sha512-kFgjyIodOArXTJXl2WZPTyBhqGOoUYhROktqfbucQZlIDuglD62Rrn4C3AynHfi9D4suVquqJpEd78MIVfxemA==
+syphonx-core@^1.0.12:
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/syphonx-core/-/syphonx-core-1.0.12.tgz#769190a7104126e81f081a60dcec8237877c2f58"
+  integrity sha512-B/NreBwQQ7fMLf6ZLGW1yGh1Ft/DRWoRbJYNr5ecNOFCp1UGVIjJXAnrPAzhI3myPrQguf9rBHK3l6uRDx+TRg==
   dependencies:
     puppeteer "^15.4.0"
 

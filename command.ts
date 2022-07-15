@@ -2,6 +2,7 @@
 
 import * as dotenv from "dotenv";
 import { default as run } from "./run.js";
+import { version } from "./common/index.js";
 
 dotenv.config();
 
@@ -10,8 +11,14 @@ const help = `Usage: syphonx <command> [<args>]
 Available commands:
   run      runs a script to syphon data from a webpage
 
-syhponx <command> --help for more information on a specific command
+syhponx <command> --help  for more information on a specific command
+syphonx --version  displays the current syphonx version
 `;
+
+if (process.argv[2] === "--version") {
+    console.log(version());
+    process.exit();
+}
 
 if (process.argv.length < 3 || command === "--help") {
     console.log(help);

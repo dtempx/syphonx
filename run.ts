@@ -1,6 +1,6 @@
 import { default as runQuery } from "./run-query.js";
 import { default as runUrl } from "./run-url.js";
-import { parseArgs, version } from "./common/index.js";
+import { parseArgs } from "./common/index.js";
 
 export default async function () {
     const args = parseArgs({
@@ -24,8 +24,7 @@ export default async function () {
             timeout: "navigation timeout in milliseconds (default=30000)",
             tag: "tags inserted data",
             out: "determines output (data, html, log), specify html:post for post transformed HTML",
-            insert: "specifies to insert to configured data target",
-            version: "display the current syphonx version"
+            insert: "specifies to insert to configured data target"
         },
         validate: args => {
             if (!args[1] && !args.query && !args.version)
@@ -33,9 +32,7 @@ export default async function () {
         }
     });
  
-    if (args.version)
-        console.log(version());
-    else if (args.query)
+    if (args.query)
         await runQuery(args);
     else
         await runUrl(args);
