@@ -1,0 +1,37 @@
+need json schema validation!! just lost a ton of time debugging a problem where transforms needed single array not double array
+get latest useragent from cloud
+
+_status variable that holds HTTP status of page
+change samsung/apple to _status
+
+need a way to exit if status is not ok (for example on a _blocked var for wilson)
+need a way to verify lots of different urls (for example wilson)
+
+
+request through proxy (rotating)
+
+
+consider removing --waituntil option
+
+load scripts from cloud
+field level validation to prevent bad data at source!!
+config for script storage and data warehouse
+template schema to enforce consistency
+script schema to enforce valid sciprts
+
+modes: playwright, puppeteer, request
+
+split commands up
+refactor query code out of command.ts
+snooze between pages
+page load retries
+add headers to script
+browser pool
+scroll-to-bottom option
+up-to-date useragents
+support device modes
+proxy
+
+show number of errors for each inserted item
+option to control whether or not to insert on error
+add a status column to syphonx table

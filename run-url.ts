@@ -66,6 +66,7 @@ export default async function (args: Record<string, string>): Promise<void> {
                 console.log(`status: ${result.status}`);
             if (result.log) {
                 console.log(result.log);
+                console.log(JSON.stringify(result.vars));
                 console.log();
             }
         }

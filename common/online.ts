@@ -12,7 +12,7 @@ const __dirname = path.dirname(__filename);
 const __jquery = fs.readFileSync(path.resolve(__dirname, "../jquery.slim.min.js"), "utf8");
 
 const defaultBrowserOptions = {
-    useragent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36",
+    useragent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36",
     headers: { "Accept-Language": "en-US,en" },
     viewport: { width: 1366, height: 768 }
 };
