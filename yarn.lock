@@ -728,10 +728,10 @@ stubs@^3.0.0:
   resolved "https://registry.yarnpkg.com/stubs/-/stubs-3.0.0.tgz#e8d2ba1fa9c90570303c030b6900f7d5f89abe5b"
   integrity sha1-6NK6H6nJBXAwPAMLaQD31fiavls=
 
-syphonx-core@^1.0.23:
-  version "1.0.23"
-  resolved "https://registry.yarnpkg.com/syphonx-core/-/syphonx-core-1.0.23.tgz#11cd076ad52f9c883d0b4f62071edeab3d34ce09"
-  integrity sha512-k8O7n90/6aUqkc5bydyKt1nt8flywLHy5x3FDWaB0zmlFc/eGel3aZulW9Edy3VHzpTMhrSYoQWq4SJ8LADJYA==
+syphonx-core@^1.0.24:
+  version "1.0.24"
+  resolved "https://registry.yarnpkg.com/syphonx-core/-/syphonx-core-1.0.24.tgz#5f7a68f2e724ce9924dcd14e0327101f98acbc9b"
+  integrity sha512-A9pu1987mru5CiilzYWqtWTHS+O1YXATt3QmZpjhUqlQB6QkFdy7sPYN76qLnJc6cvO++2CWx6Lu2Z2RHBKzXg==
 
 tar-fs@2.1.1:
   version "2.1.1"
