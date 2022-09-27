@@ -1,3 +1,5 @@
+allow control over http headers, useragent, and viewport size
+
 need json schema validation!! just lost a ton of time debugging a problem where transforms needed single array not double array
 get latest useragent from cloud
 

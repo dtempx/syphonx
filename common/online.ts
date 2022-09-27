@@ -70,7 +70,7 @@ export async function online({ show = false, pause, includeDOMRefs = false, outp
         });
 
         await page.goto(options.url, { waitUntil: "load", timeout });
-        options.vars._http_status = status;
+        options.vars.__http_status = status;
         await page.evaluate(__jquery);
 
         if (["before", "both"].includes(pause!) && show)
@@ -98,7 +98,7 @@ export async function online({ show = false, pause, includeDOMRefs = false, outp
         while (state.yield) {
             await page.waitForNavigation({ waitUntil: "load", timeout: state.yield.timeout });
             state.yield === undefined;
-            state.vars._http_status = status;
+            state.vars.__http_status = status;
             state = await page.evaluate(syphonx.extract, state as any);
         }
 
