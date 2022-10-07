@@ -48,6 +48,7 @@
     "cheerio": "^1.0.0-rc.12",
     "dotenv": "^16.0.0",
     "jquery": "^3.6.0",
+    "node-fetch": "^3.2.10",
     "parse-full-name": "^1.2.6",
     "puppeteer": "^18.0.5",
     "strip-json-comments": "^4.0.0",

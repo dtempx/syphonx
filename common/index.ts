@@ -8,3 +8,4 @@ export * from "./version.js";
 
 export { default as insert } from "./insert.js";
 export { default as prompt } from "./prompt.js";
+export * as store from "./store.js";

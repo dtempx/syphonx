@@ -1,9 +1,9 @@
 import * as syphonx from "syphonx-core";
 import * as fs from "fs";
-import { insert, loadJSON, offline, online, subset, tryParseJSON, Script } from "./common/index.js";
+import { insert, offline, online, store, subset, tryParseJSON, Script } from "./common/index.js";
 
 export default async function (args: Record<string, string>): Promise<void> {
-    const script: Script = args[1] ? await loadJSON(args[1]) : { actions: [] };
+    const script: Script = args[1] ? await store.load(args[1]) : { actions: [] };
     const url = args.url || script.url;
     if (!url && !args[2]) {
         console.log("url not specified");

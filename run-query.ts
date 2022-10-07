@@ -2,7 +2,7 @@ import * as path from "path";
 import * as async from "async-parallel";
 import { BigQuery } from "@google-cloud/bigquery";
 import { EventEmitter } from "events";
-import { loadJSON, sleep, insert, online, randomize, tryParseJSON, Script } from "./common/index.js";
+import { store, sleep, insert, online, randomize, tryParseJSON, Script } from "./common/index.js";
 
 const bigquery = new BigQuery();
 
@@ -29,7 +29,7 @@ export default async function (args: Record<string, string>): Promise<void> {
     for (const key of Array.from(new Set(rows.map(row => row.key)))) {
         const file = path.resolve(`${root}${key}.json`);
         try {
-            scripts[key] = await loadJSON(file);
+            scripts[key] = await store.load(file);
             console.log(`SCRIPT LOADED: ${file}`);
         }
         catch (err) {
