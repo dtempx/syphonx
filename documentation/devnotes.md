@@ -12,6 +12,7 @@ yarn build
 node command --help
 node command --version
 node command run --help
+node command run $/examples/example.json
 node command run test.json
 node command run test.json --show
 node command run test.json --show --pause
@@ -22,7 +23,6 @@ node command run test.json --out=data,log
 node command run test.json test.html
 node command run test.json test.html --out=data,log
 node command run test.json --offline
-node command run $/examples/example.json
 ```
 
 ## Deploy

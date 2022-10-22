@@ -17,7 +17,7 @@ export default async function (args: Record<string, string>): Promise<void> {
     const dataset = script.key ? script.key.split("/").filter(text => text.length > 0)[0] : "";
     const table = "syphonx";
 
-    let result: syphonx.ExtractResult;
+    let result: Partial<syphonx.ExtractResult>;
     if (!args[2]) {
         const pause = args.pause === "1" ? "before" : (args.pause as "before" | "after" | "both" | undefined);
         const show = !!args.show || !!pause;

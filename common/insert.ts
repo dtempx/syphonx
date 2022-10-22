@@ -10,7 +10,7 @@ interface InsertParams {
     key: string;
     id?: string;
     tag?: string;
-    result: ExtractResult
+    result: Partial<ExtractResult>
 }
 
 export default async function({ dataset, table, id = uuid.v4(), key, tag, result }: InsertParams): Promise<string> {

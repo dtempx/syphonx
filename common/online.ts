@@ -5,7 +5,7 @@ import * as syphonx from "syphonx-core";
 import * as path from "path";
 import { fileURLToPath } from "url";
 import { default as prompt } from "./prompt.js";
-import { removeDOMRefs } from "./utilities.js";
+import { omit, parseUrl, randomize, removeDOMRefs, sleep } from "./utilities.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,13 +17,13 @@ const defaultBrowserOptions = {
     viewport: { width: 1366, height: 768 }
 };
 
-interface BrowserOptions {
+export interface BrowserOptions {
     useragent?: string;
     headers?: Record<string, string>;
     viewport?: { width: number, height: number };
 }
 
-interface OnlineOptions {
+export interface OnlineOptions {
     actions: syphonx.Action[];
     url: string;
     params?: Record<string, unknown>;
@@ -36,9 +36,28 @@ interface OnlineOptions {
     browserOptions?: BrowserOptions;
     includeDOMRefs?: boolean;
     outputTransformedHTML?: boolean;
+    retries?: number;
+    onRetry?: (retry: number) => Promise<void>;
 }
 
-export async function online({ show = false, pause, includeDOMRefs = false, outputTransformedHTML = false, browserOptions, offline, timeout, ...options }: OnlineOptions): Promise<syphonx.ExtractResult> {
+export async function online({ retries = 0, onRetry, ...options}: OnlineOptions): Promise<Partial<syphonx.ExtractResult>> {
+    let result = {} as Partial<syphonx.ExtractResult>;
+    let retry = 0;
+    while (retry <= retries) {
+        result = await tryOnline(options);
+        if (result.ok)
+            break;
+        if (!result.errors?.some(error => ["select-timeout", "external-error", "waitfor-timeout"].includes(error.code)))
+            break;
+        if (onRetry)
+            await onRetry(++retry);
+        else
+            await sleep(++retry === 1 ? 5000 : 30000);
+    }
+    return result;
+}
+
+async function tryOnline({ show = false, pause, includeDOMRefs = false, outputTransformedHTML = false, browserOptions, offline, timeout, ...options }: OnlineOptions): Promise<Partial<syphonx.ExtractResult>> {
     if (!options.url)
         throw new Error("url not specified");
     if (!options.vars)
@@ -109,7 +128,7 @@ export async function online({ show = false, pause, includeDOMRefs = false, outp
             await prompt("done, hit enter to continue...");
 
         return {
-            ...state,
+            ...omit(state, "actions"),
             ok: state.errors.length === 0,
             status,
             url,
@@ -119,6 +138,20 @@ export async function online({ show = false, pause, includeDOMRefs = false, outp
             online: true,
             data: includeDOMRefs ? state.data : removeDOMRefs(state.data)
         };    
+    }
+    catch (err) {
+        const { domain, origin } = parseUrl(options.url);
+        return {
+            ok: false,
+            url: options.url,
+            domain,
+            origin,
+            errors: [{
+                code: "external-error" as any,
+                message: err instanceof Error ? err.message : JSON.stringify(err)
+            }],
+            online: true
+        };
     }
     finally {
         if (page)

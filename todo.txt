@@ -1,3 +1,7 @@
+csv mode that converts html from a csv file using streams (see Transforming a CSV file to another CSV file in Node.js at https://techsparx.com/nodejs/howto/csv-transformation.html)
+
+retries with backoff delay
+
 allow control over http headers, useragent, and viewport size
 
 need json schema validation!! just lost a ton of time debugging a problem where transforms needed single array not double array

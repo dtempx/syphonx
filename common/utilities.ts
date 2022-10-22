@@ -1,23 +1,3 @@
-import { text } from "stream/consumers";
-
-export function sleep(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-export function ltrim(text: string, pattern: string): string {
-    while (text.startsWith(pattern)) {
-        text = text.slice(pattern.length);
-    }
-    return text;
-}
-
-export function rtrim(text: string, pattern: string): string {
-    while (text.endsWith(pattern)) {
-        text = text.slice(0, -1 * pattern.length)
-    }
-    return text;
-}
-
 export function combineUrl(url: string, path: string): string {
     if (url && path) {
         return `${rtrim(url, "/")}/${ltrim(path, "/")}`;
@@ -54,6 +34,27 @@ export function isObject(obj: unknown): boolean {
     return typeof obj === "object" && obj !== null && !(obj instanceof Array) && !(obj instanceof Date);
 }
 
+export function omit<T extends object, K extends [...(keyof T)[]]>(obj: T, ...keys: K): { [K2 in Exclude<keyof T, K[number]>]: T[K2] } {
+    const result = {} as { [K in keyof typeof obj]: (typeof obj)[K] };
+    let key: keyof typeof obj;
+    for (key in obj)
+        if (!(keys.includes(key)))
+            result[key] = obj[key];
+    return result;
+}
+
+export function parseUrl(url: string): { domain?: string, origin?: string } {
+    if (/^https?:\/\//.test(url)) {
+        const [protocol, , host] = url.split("/");
+        const a = host.split(":")[0].split(".").reverse();
+        return {
+            domain: a.length >= 3 && a[0].length === 2 && a[1].length === 2 ? `${a[2]}.${a[1]}.${a[0]}` : a.length >= 2 ? `${a[1]}.${a[0]}` : undefined,
+            origin: protocol && host ? `${protocol}//${host}` : undefined
+        };    
+    }
+    return {};
+}
+
 export function randomize(low: number, high?: number): number {
     const r = Math.random();
     if (high && high > low)
@@ -68,6 +69,20 @@ export function subset(obj: Record<string, unknown>, keys: string[]): Record<str
         result[key] = obj[key];
     }
     return result;
+}
+
+export function ltrim(text: string, pattern: string): string {
+    while (text.startsWith(pattern)) {
+        text = text.slice(pattern.length);
+    }
+    return text;
+}
+
+export function rtrim(text: string, pattern: string): string {
+    while (text.endsWith(pattern)) {
+        text = text.slice(0, -1 * pattern.length)
+    }
+    return text;
 }
 
 export function removeDOMRefs(obj: unknown): unknown {
@@ -93,4 +108,8 @@ export function removeDOMRefs(obj: unknown): unknown {
     else {
         return obj;
     }
+}
+
+export function sleep(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }

@@ -1,6 +1,6 @@
 import * as cheerio from "cheerio";
 import * as syphonx from "syphonx-core";
-import { removeDOMRefs } from "./utilities.js";
+import { omit, removeDOMRefs } from "./utilities.js";
 
 export interface OfflineOptions {
     actions: syphonx.Action[];
@@ -11,11 +11,11 @@ export interface OfflineOptions {
     includeDOMRefs?: boolean;
 }
 
-export async function offline({ html, includeDOMRefs, ...options }: OfflineOptions): Promise<syphonx.ExtractResult> {
+export async function offline({ html, includeDOMRefs, ...options }: OfflineOptions): Promise<Omit<syphonx.ExtractResult, "actions">> {
     const root = cheerio.load(html);
     const result = await syphonx.extract({ ...options, root } as syphonx.ExtractState);
     return {
-        ...result,
+        ...omit(result, "actions"),
         ok: result.errors.length === 0,
         status: 0,
         online: false,
