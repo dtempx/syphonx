@@ -45,8 +45,8 @@ Of course, you could also do it like this...
 In this case these two examples will produce identical results. However more complex scenarios may require breaking it down to seperate selectors.
 
 
-# How do Regular Expressions work within a selector?
-Regular Expressions can be used by adding an `extract` method to a selector which extracts text from the jQuery result.
+# Is there a way to extract a substring from matched text?
+Yes, Regular Expressions can be used by adding an `extract` method to a selector which extracts text from the jQuery result.
 
 Here's an example that extracts the matching word after the text of *"color: "* within any matching `<div>` element.
 ```json
@@ -56,7 +56,9 @@ Here's an example that extracts the matching word after the text of *"color: "* 
 }
 ```
 
-Regular Expressions can also be used to replace text within a jQuery result using the `replace` method.
+
+# Is there a way to search and replace matched text?
+Yes, Regular Expressions can also be used to replace text within a jQuery result using the `replace` method.
 
 Here's an example that replaces the word `group` with the word `category` within any matching `<div>` element. Regular Expressions are always designated with a `/` before and after. The `gi` are standard Regular Expression options, `g` to match *globally* (to replace all instead of just one) and `i` to *ignore* case.
 ```json
@@ -64,7 +66,28 @@ Here's an example that replaces the word `group` with the word `category` within
     "name": "description",
     "$": [["div",["replace","/group/gi","category"]]]
 }
+```
 
+# When selecting only the first hit is returned, is there a way to return all hits?
+Yes, by default SyphonX only returns the first hit when `repeated` is `false` (which is the default), but you can easily get all hits.
+
+If you want all hits within a single string specify the `all` option...
+```json
+{
+    "name": "channels",
+    "all": true,
+    "$": [["ul > li"]]
+}
+```
+The above option returns the items seperated by a space. Specify `"format": "multiline"` for newline seperated output. If tab or comma seperated output is desired, use the `replace` method to transform the newlines.
+
+If you want multiple hits in an array, specify the `repeated` option...
+```json
+{
+    "name": "channels",
+    "repeated": true,
+    "$": [["ul > li"]]
+}
 ```
 
 
@@ -87,7 +110,7 @@ If the inner HTML is desired then specify `inner` like so...
 ```
 
 
-# Sometimes selected URL's are relative, is there a way to make them absolute?
+# Sometimes when selecting URL's they are relative, is there a way to make them absolute?
 Yes, use `format` to specify `href` format.
 ```json
 {
