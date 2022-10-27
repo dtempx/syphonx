@@ -8,6 +8,8 @@ SyphonX selectors are based on jQuery and expressed using the `"$"` property in 
 }
 ```
 
+In this example the contents of the `<h1>` tag are extracted to the `title` property in output.
+
 Below are some more examples comparing jQuery and SyphonX selectors.
 
 jQuery                                                           | SyphonX
@@ -17,12 +19,36 @@ jQuery                                                           | SyphonX
 `$('img[src*=/employee/]').attr('src')`                          | `[["img[src*=/employee/]",["attr","src"]]]`
 `$('h4:contains("Admitted")').closest('.panel').find('ul > li')` | `[["h4:contains('Admitted')",["closest",".panel"],["find","ul > li"]]`
 
-> SyphonxX fully supports *all* jQuery functionality, so anything that can be done with jQuery can also be done in SyphonX. Any arbitrary jQuery expression (of any complexity) can be expressed in SyphonX.
+> SyphonX fully supports *all* jQuery functionality, so anything that can be done with jQuery can also be done in SyphonX. Any arbitrary jQuery expression (of any complexity) can be expressed in SyphonX.
+
+
+# Why are there double brackets in the selectors?
+Because for some websites the same information may be found at different places within the DOM from page to page.
+
+For example a price may be designated as `<div class="price">$9.99</div>` on one page but as `<span id="price">$9.99<span>` on another. Defining a selector like the below will catch both cases.
+
+```json
+{
+    "name": "price",
+    "$": [[".price"],["#price"]]
+}
+```
+
+Of course, you could also do it like this...
+```json
+{
+    "name": "price",
+    "$": [[".price, #price"]]
+}
+```
+
+In this case these two examples will produce identical results. However more complex scenarios may require breaking it down to seperate selectors.
+
 
 # How do Regular Expressions work within a selector?
-Regular Expressions can be defined using the `extract` method in a selector to extract text from a jQuery result.
+Regular Expressions can be used by adding an `extract` method to a selector which extracts text from the jQuery result.
 
-Here's an example that extracts the matching word after `color: ` within any matching `<div>` element.
+Here's an example that extracts the matching word after the text of *"color: "* within any matching `<div>` element.
 ```json
 {
     "name": "color",
@@ -32,7 +58,7 @@ Here's an example that extracts the matching word after `color: ` within any mat
 
 Regular Expressions can also be used to replace text within a jQuery result using the `replace` method.
 
-Here's an example that replaces the word `group` with the word `category` within any matching `<div>` element.
+Here's an example that replaces the word `group` with the word `category` within any matching `<div>` element. Regular Expressions are always designated with a `/` before and after. The `gi` are standard Regular Expression options, `g` to match *globally* (to replace all instead of just one) and `i` to *ignore* case.
 ```json
 {
     "name": "description",
@@ -40,6 +66,7 @@ Here's an example that replaces the word `group` with the word `category` within
 }
 
 ```
+
 
 # Sometimes selected URL's are relative, is there a way to make them absolute?
 Yes, use `format` to specify `href` format.

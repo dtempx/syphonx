@@ -7,7 +7,7 @@ npm init -y
 npm install syphonx
 ```
 
-Try More Examples
+Try some more examples...
 * [Google Search](examples/google-search.md)
 
 

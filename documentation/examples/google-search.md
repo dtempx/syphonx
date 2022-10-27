@@ -8,19 +8,14 @@ This should produce output similar to the following...
 {
   "search_result": [
     {
-      "name": "Meme Generator - Imgflip",
-      "excerpt": "Insanely fast, mobile-friendly meme generator. Caption memes or upload your own images to make custom memes .",
-      "href": "https://imgflip.com/memegenerator"
-    },
-    {
       "name": "Meme - Wikipedia",
-      "excerpt": "A meme (/miːm/ MEEM) is an idea, behavior, or style that spreads by means of imitation from person to person within a culture and often carries symbolic ...",
+      "excerpt": "A meme (/miːm/ MEEM) is an idea, behavior, or style that spreads by means of imitation from person to person within a culture and often carries symbolic ...",
       "href": "https://en.wikipedia.org/wiki/Meme"
     },
     {
-      "name": "Meme Definition & Meaning - Merriam-Webster",
-      "excerpt": "The meaning of MEME is an amusing or interesting item (such as a captioned picture or video) or genre of items that is spread widely online especially ...",
-      "href": "https://www.merriam-webster.com/dictionary/meme"
+      "name": "Meme Generator - Imgflip",
+      "excerpt": "Insanely fast, mobile-friendly meme generator. Caption memes or upload your own images to make custom memes .",
+      "href": "https://imgflip.com/memegenerator"
     },
     {
       "name": "Know Your Meme: Internet Meme Database",
@@ -28,18 +23,32 @@ This should produce output similar to the following...
       "href": "https://knowyourmeme.com/"
     },
     {
+      "name": "What Is a Meme? - Lifewire",
+      "excerpt": "Sep 16, 2022 — A meme is a virally transmitted image embellished with text, usually sharing pointed commentary on cultural symbols, social ideas, ...",
+      "href": "https://www.lifewire.com/what-is-a-meme-2483702"
+    },
+    {
       "name": "meme | Definition, Meaning, History, & Facts - Britannica",
-      "excerpt": "Oct 4, 2022 — meme , unit of cultural information spread by imitation. The term meme (from the Greek mimema, meaning “imitated”) was introduced in 1976 by ...",
+      "excerpt": "Oct 4, 2022 — meme , unit of cultural information spread by imitation. The term meme (from the Greek mimema, meaning “imitated”) was introduced in 1976 by ...",
       "href": "https://www.britannica.com/topic/meme"
     },
     {
-      "name": "Search & Discover Funny Memes, Photos & Videos | Memes",
-      "excerpt": "Memes is your source for the best & newest Memes , Funny Pictures, and hilarious videos. Find memes or make them with our Meme Generator.",
-      "href": "https://memes.com/"
- item in the ...",
+      "name": "The Meaning and History of Memes - The New York Times",
+      "excerpt": "Feb 14, 2022 — Webster's New World College Dictionary defines a meme as “a concept, belief, or practice conceived as a unit of cultural information that may be ...",
+      "href": "https://www.nytimes.com/2022/01/26/crosswords/what-is-a-meme.html"
+    },
+    {
+      "name": "Meme Definition & Meaning - Dictionary.com",
+      "excerpt": "meme · a cultural item that is transmitted by repetition and replication in a manner analogous to the biological transmission of genes. · a cultural item in the ...",
       "href": "https://www.dictionary.com/browse/meme"
+    },
+    {
+      "name": "meme - Wiktionary",
+      "excerpt": null,
+      "href": "https://en.wiktionary.org/wiki/meme"
     }
-  ]}
+  ]
+}
 ```
 
 Here is the template that produced this result...

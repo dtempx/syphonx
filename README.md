@@ -4,7 +4,7 @@ SyphonX is a simple and powerful way to extract data from anywhere on the web wi
 
 ### Get Started
 
-Simply run the following from the command-line anywhere [Node.js 14](https://nodejs.org/) or higher is installed...
+Simply run the following from the command-line anywhere Node.js 14 or higher is installed...
 
 ```
 npx syphonx run $/examples/example.json
@@ -46,7 +46,10 @@ Information from the page was extracted using the following template...
 }
 ```
 
+As seen above this template extracts `name`, `description`, and `href` from the target [webpage](https://www.example.com/). The `"$"` properties in the template define how data is extracted, and these are basically just [jQuery](https://api.jquery.com/) selectors.
+
 This template was downloaded from the cloud at `$/examples/example.json`, but you can also run templates locally.
+
 
 ### Want to know more?
 * [Try some more examples](documentation/install.md)
