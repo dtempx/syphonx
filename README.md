@@ -50,4 +50,4 @@ Information from the page was extracted using the following template...
 ### Want to know more?
 * [Try some more examples](documentation/install.md)
 * [SyphonX API Documentation](documentation/overview.md)
-* [FAQ](documentations/faq.md)
+* [FAQ](documentation/faq.md)
