@@ -68,6 +68,25 @@ Here's an example that replaces the word `group` with the word `category` within
 ```
 
 
+# Is there a way to get the HTML instead of text?
+Yes, add the `html` method to the selector which return the outer HTML.
+```json
+{
+    "name": "image_url",
+    "$": [["div",["html"]]],
+    "format": "href"
+}
+```
+If the inner HTML is desired then specify `inner` like so...
+```json
+{
+    "name": "image_url",
+    "$": [["div",["html","inner"]]],
+    "format": "href"
+}
+```
+
+
 # Sometimes selected URL's are relative, is there a way to make them absolute?
 Yes, use `format` to specify `href` format.
 ```json
