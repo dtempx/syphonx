@@ -46,6 +46,7 @@ Information from the page was extracted using the following template...
 }
 ```
 
+This template was downloaded from the cloud at `$/examples/example.json`, but you can also run templates locally.
 
 ### Want to know more?
 * [Try some more examples](documentation/install.md)

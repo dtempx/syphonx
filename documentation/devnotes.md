@@ -28,6 +28,7 @@ node command run test.json --offline
 ## Deploy
 ```
 yarn upgrade syphonx-core --latest
+yarn upgrade puppeteer --latest
 yarn build
 yarn test
 npm publish
