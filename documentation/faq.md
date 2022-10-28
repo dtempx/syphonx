@@ -8,7 +8,7 @@ SyphonX selectors are based on jQuery and expressed using the `"$"` property in 
 }
 ```
 
-In this example the contents of the `<h1>` tag are extracted to the `title` property in output.
+In this example the contents of the `<h1>` tag are assigned to the `title` property.
 
 Below are some more examples comparing jQuery and SyphonX selectors.
 
@@ -19,7 +19,7 @@ jQuery                                                           | SyphonX
 `$('img[src*=/employee/]').attr('src')`                          | `[["img[src*=/employee/]",["attr","src"]]]`
 `$('h4:contains("Admitted")').closest('.panel').find('ul > li')` | `[["h4:contains('Admitted')",["closest",".panel"],["find","ul > li"]]`
 
-> SyphonX fully supports *all* jQuery functionality, so anything that can be done with jQuery can also be done in SyphonX. Any arbitrary jQuery expression (of any complexity) can be expressed in SyphonX.
+SyphonX fully supports *all* jQuery functionality, so anything that can be done with jQuery can also be done in SyphonX.
 
 
 # Why are there double brackets in the selectors?
@@ -45,7 +45,7 @@ Of course, you could also do it like this...
 In this case these two examples will produce identical results. However more complex scenarios may require breaking it down to seperate selectors.
 
 
-# Is there a way to extract a substring from selected text?
+# Is there a way to extract a substring from the selected text?
 A regular expression can be used by adding an `extract` method to a selector which extracts text from the jQuery result.
 
 Here's an example that extracts the matching word after the text of *"color: "* within any selected `<div>` element.
@@ -57,7 +57,7 @@ Here's an example that extracts the matching word after the text of *"color: "* 
 ```
 
 
-# Is there a way to search and replace selected text?
+# Is there a way to modify the selected text with a search and replace?
 A regular expression can also be used to replace text within a jQuery result using the `replace` method.
 
 Here's an example that replaces the word `group` with the word `category` within any selected `<div>` element. Regular Expressions are always designated with a `/` before and after. The `gi` are standard Regular Expression options, `g` to match *globally* (to replace all instead of just one) and `i` to *ignore* case.
@@ -179,7 +179,7 @@ Use `format` to specify `href` format which prepends the site name when a non fu
 }
 ```
 
-# Is it possible to modify the DOM, for example to add a class or delete elements, before selecting the data?
+# Is it possible to modify the DOM before selecting the data, for example to add a class or delete elements?
 Use the `transform` action to modify the DOM using `addClass()`, `remove()`, `replaceWith()`, `wrap()` and other jQuery manipulators.
 
 Here is an example that adds a `figure` class to all `<img>` elements contained by a `<p>` element...
