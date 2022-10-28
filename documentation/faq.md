@@ -45,10 +45,10 @@ Of course, you could also do it like this...
 In this case these two examples will produce identical results. However more complex scenarios may require breaking it down to seperate selectors.
 
 
-# Is there a way to extract a substring from matched text?
-Yes, Regular Expressions can be used by adding an `extract` method to a selector which extracts text from the jQuery result.
+# Is there a way to extract a substring from selected text?
+A regular expression can be used by adding an `extract` method to a selector which extracts text from the jQuery result.
 
-Here's an example that extracts the matching word after the text of *"color: "* within any matching `<div>` element.
+Here's an example that extracts the matching word after the text of *"color: "* within any selected `<div>` element.
 ```json
 {
     "name": "color",
@@ -57,10 +57,10 @@ Here's an example that extracts the matching word after the text of *"color: "* 
 ```
 
 
-# Is there a way to search and replace matched text?
-Yes, Regular Expressions can also be used to replace text within a jQuery result using the `replace` method.
+# Is there a way to search and replace selected text?
+A regular expression can also be used to replace text within a jQuery result using the `replace` method.
 
-Here's an example that replaces the word `group` with the word `category` within any matching `<div>` element. Regular Expressions are always designated with a `/` before and after. The `gi` are standard Regular Expression options, `g` to match *globally* (to replace all instead of just one) and `i` to *ignore* case.
+Here's an example that replaces the word `group` with the word `category` within any selected `<div>` element. Regular Expressions are always designated with a `/` before and after. The `gi` are standard Regular Expression options, `g` to match *globally* (to replace all instead of just one) and `i` to *ignore* case.
 ```json
 {
     "name": "description",
@@ -68,8 +68,69 @@ Here's an example that replaces the word `group` with the word `category` within
 }
 ```
 
+# What if I need to click on a button to get the data to appear?
+Use the `click` action to click on any interactive element in the DOM.
+
+For example here is how to click on the first `<a class="buy-button">`.
+```json
+{
+    "actions": [
+        { "click": { "$": [["a.buy-button"]] } },
+        { "select": [
+            ...
+        ]}
+        ...
+    ]
+}
+```
+
+If the click navigates to a new page, add a `yield` action after `click` like so...
+```json
+{
+    "actions": [
+        { "click": { "$": [["a.buy-button"]] } },
+        { "yield": null },
+        { "select": [
+            ...
+        ]}
+    ]
+}
+```
+
+# What if the data I need doesn't show up right away in the DOM?
+Use the `waitfor` action to wait for any element to appear before selecting the data.
+```json
+{
+    "actions": [
+        { "waitfor": { "$": [[".search-results"]] } },
+        { "select": [
+            ...
+        ]}
+    ]
+}
+```
+Any number of `waitfor`, `click`, and `select` actions can be sequenced together.
+
+
+# How can I click on a button and then wait for data to appear before selecting?
+A `waitfor` sub-action can be placed within a `click` action like so...
+```json
+{
+    "click": {
+        "$": [["a.buy-button"]]
+    },
+    "waitfor": {
+        "$": [["#buybox"]],
+        "timeout": 10,
+        "retry": 1
+    }
+}
+```
+The above example will click on `<a class="buy-button">` and wait-for an element with an id of `buybox` to appear. If the element doesn't appear within 10 seconds the click and wait-for will be repeated one time. 
+
+
 # When selecting only the first hit is returned, is there a way to return all hits?
-Yes, by default SyphonX only returns the first hit when `repeated` is `false` (which is the default), but you can easily get all hits.
+By default SyphonX only returns the first hit when `repeated` is `false` (which is the default), but you can easily get all hits.
 
 If you want all hits within a single string specify the `all` option...
 ```json
@@ -92,30 +153,75 @@ If you want multiple hits in an array, specify the `repeated` option...
 
 
 # Is there a way to get the HTML instead of text?
-Yes, add the `html` method to the selector which return the outer HTML.
+Add an `html` method to the selector which returns the outer HTML.
 ```json
 {
     "name": "image_url",
-    "$": [["div",["html"]]],
-    "format": "href"
+    "$": [["div",["html"]]]
 }
 ```
-If the inner HTML is desired then specify `inner` like so...
+If you want the inner HTML instead then specify `inner` like so...
 ```json
 {
     "name": "image_url",
-    "$": [["div",["html","inner"]]],
-    "format": "href"
+    "$": [["div",["html","inner"]]]
 }
 ```
 
 
-# Sometimes when selecting URL's they are relative, is there a way to make them absolute?
-Yes, use `format` to specify `href` format.
+# Sometimes selected URL's are not absolute, is there a way to make them so?
+Use `format` to specify `href` format which prepends the site name when a non fully qualified URL is selected.
 ```json
 {
     "name": "image_url",
     "$": [["img",["attr","src"]]],
     "format": "href"
 }
+```
+
+# Is it possible to modify the DOM, for example to add a class or delete elements, before selecting the data?
+Use the `transform` action to modify the DOM using `addClass()`, `remove()`, `replaceWith()`, `wrap()` and other jQuery manipulators.
+
+Here is an example that adds a `figure` class to all `<img>` elements contained by a `<p>` element...
+```json
+    "actions": [
+        {
+            "transform": [
+                { "$": ["p > img",["addClass","figure"]] }
+            ]
+        },
+        "select": [
+            ...
+        ]
+    ]
+```
+Any number of transforms can be expressed within a transform action, and they are executed in the order they are defined.
+
+
+# How can I click through multiple pages, selecting data on each page?
+This can be done using the `repeat` action, see the [pager](examples/pager.md) example for details.
+
+
+# How can I select all the data on a page after scrolling all the way down on an infinite scroller page?
+This can be done using the `repeat` action, see the [infinite scroller](examples/infinite-scroller.md) example for details.
+
+
+
+
+# My selector isn't working, how can I troubleshoot it?
+There are several ways to troubleshoot with SyphonX.
+
+Show the page as it's being captured...
+```
+npx syphonx run $/examples/example.json --show
+```
+
+Show the page with a pause so the page can be inspected before extracting...
+```
+npx syphonx run $/examples/example.json --show --pause
+```
+
+Show detailed log output...
+```
+npx syphonx run $/examples/example.json --out=log
 ```
