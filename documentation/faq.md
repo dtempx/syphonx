@@ -1,7 +1,7 @@
 # How do selectors work?
 SyphonX selectors are based on jQuery and expressed using the `"$"` property in a SyphonX template.
 
-```json
+```
 {
     "name": "title",
     "$": [["h1"]]
@@ -27,7 +27,7 @@ Because for some websites the same information may be found at different places 
 
 For example a price may be designated as `<div class="price">$9.99</div>` on one page but as `<span id="price">$9.99<span>` on another. Defining a selector like the below will catch both cases.
 
-```json
+```
 {
     "name": "price",
     "$": [[".price"],["#price"]]
@@ -35,7 +35,7 @@ For example a price may be designated as `<div class="price">$9.99</div>` on one
 ```
 
 Of course, you could also do it like this...
-```json
+```
 {
     "name": "price",
     "$": [[".price, #price"]]
@@ -49,7 +49,7 @@ In this case these two examples will produce identical results. However more com
 A regular expression can be used by adding an `extract` method to a selector which extracts text from the jQuery result.
 
 Here's an example that extracts the matching word after the text of *"color: "* within any selected `<div>` element.
-```json
+```
 {
     "name": "color",
     "$": [["div",["extract","/color: ([a-z]+)/"]]]
@@ -61,7 +61,7 @@ Here's an example that extracts the matching word after the text of *"color: "* 
 A regular expression can also be used to replace text within a jQuery result using the `replace` method.
 
 Here's an example that replaces the word `group` with the word `category` within any selected `<div>` element. Regular Expressions are always designated with a `/` before and after. The `gi` are standard Regular Expression options, `g` to match *globally* (to replace all instead of just one) and `i` to *ignore* case.
-```json
+```
 {
     "name": "description",
     "$": [["div",["replace","/group/gi","category"]]]
@@ -72,7 +72,7 @@ Here's an example that replaces the word `group` with the word `category` within
 Use the `click` action to click on any interactive element in the DOM.
 
 For example here is how to click on the first `<a class="buy-button">`.
-```json
+```
 {
     "actions": [
         { "click": { "$": [["a.buy-button"]] } },
@@ -85,7 +85,7 @@ For example here is how to click on the first `<a class="buy-button">`.
 ```
 
 If the click navigates to a new page, add a `yield` action after `click` like so...
-```json
+```
 {
     "actions": [
         { "click": { "$": [["a.buy-button"]] } },
@@ -99,7 +99,7 @@ If the click navigates to a new page, add a `yield` action after `click` like so
 
 # What if the data I need doesn't show up right away in the DOM?
 Use the `waitfor` action to wait for any element to appear before selecting the data.
-```json
+```
 {
     "actions": [
         { "waitfor": { "$": [[".search-results"]] } },
@@ -114,7 +114,7 @@ Any number of `waitfor`, `click`, and `select` actions can be sequenced together
 
 # How can I click on a button and then wait for data to appear before selecting?
 A `waitfor` sub-action can be placed within a `click` action like so...
-```json
+```
 {
     "click": {
         "$": [["a.buy-button"]]
@@ -133,7 +133,7 @@ The above example will click on `<a class="buy-button">` and wait-for an element
 By default SyphonX only returns the first hit when `repeated` is `false` (which is the default), but you can easily get all hits.
 
 If you want all hits within a single string specify the `all` option...
-```json
+```
 {
     "name": "channels",
     "all": true,
@@ -143,7 +143,7 @@ If you want all hits within a single string specify the `all` option...
 The above option returns the items seperated by a space. Specify `"format": "multiline"` for newline seperated output. If tab or comma seperated output is desired, use the `replace` method to transform the newlines.
 
 If you want multiple hits in an array, specify the `repeated` option...
-```json
+```
 {
     "name": "channels",
     "repeated": true,
@@ -154,14 +154,14 @@ If you want multiple hits in an array, specify the `repeated` option...
 
 # Is there a way to get the HTML instead of text?
 Add an `html` method to the selector which returns the outer HTML.
-```json
+```
 {
     "name": "image_url",
     "$": [["div",["html"]]]
 }
 ```
 If you want the inner HTML instead then specify `inner` like so...
-```json
+```
 {
     "name": "image_url",
     "$": [["div",["html","inner"]]]
@@ -171,7 +171,7 @@ If you want the inner HTML instead then specify `inner` like so...
 
 # Sometimes selected URL's are not absolute, is there a way to make them so?
 Use `format` to specify `href` format which prepends the site name when a non fully qualified URL is selected.
-```json
+```
 {
     "name": "image_url",
     "$": [["img",["attr","src"]]],
@@ -183,7 +183,7 @@ Use `format` to specify `href` format which prepends the site name when a non fu
 Use the `transform` action to modify the DOM using `addClass()`, `remove()`, `replaceWith()`, `wrap()` and other jQuery manipulators.
 
 Here is an example that adds a `figure` class to all `<img>` elements contained by a `<p>` element...
-```json
+```
     "actions": [
         {
             "transform": [
