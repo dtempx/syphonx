@@ -1,16 +1,14 @@
-# SyphonX
-
 SyphonX is a simple and powerful way to extract data from anywhere on the web without writing complicated procedural code.
 
-### Get Started
 
-Simply run the following from the command-line anywhere Node.js 14 or higher is installed...
+# Get Started
 
+Run the following from the command-line anywhere Node.js is installed...
 ```
 npx syphonx run $/examples/example.json
 ```
 
-This should produce the following output which extracts information from the simple webpage at https://www.example.com/.
+The above command should produce the following output which is the result of extracting information from [this page](https://www.example.com/).
 ```json
 {
   "name": "Example Domain",
@@ -19,10 +17,10 @@ This should produce the following output which extracts information from the sim
 }
 ```
 
-### How does it work?
+# How does it work?
 
 Information from the page was extracted using the following template...
-```json
+```
 {
   "url": "https://www.example.com/",
   "actions": [
@@ -46,12 +44,12 @@ Information from the page was extracted using the following template...
 }
 ```
 
-As seen above this template extracts `name`, `description`, and `href` from the target [webpage](https://www.example.com/). The `"$"` properties in the template define how data is extracted, and these are basically just [jQuery](https://api.jquery.com/) selectors.
+This template extracts from the `<h1>`, `<p>` and `<a>` elements on the page and assigns to `name`, `description`, and `href` respectively. The `"$"` properties in the template define how data is extracted, which are basically [jQuery](https://api.jquery.com/) selectors.
 
-This template was downloaded from the cloud at `$/examples/example.json`, but you can also run templates locally.
+This template was downloaded from the cloud at `$/examples/example.json`, but templates can also be run locally.
 
 
-### Want to know more?
+# Want to know more?
 * [Try some more examples](documentation/install.md)
 * [SyphonX API Documentation](documentation/overview.md)
 * [FAQ](documentation/faq.md)

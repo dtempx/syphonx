@@ -129,7 +129,7 @@ A `waitfor` sub-action can be placed within a `click` action like so...
 The above example will click on `<a class="buy-button">` and wait-for an element with an id of `buybox` to appear. If the element doesn't appear within 10 seconds the click and wait-for will be repeated one time. 
 
 
-# When selecting only the first hit is returned, is there a way to return all hits?
+# When selecting, only the first hit is returned—is there a way to return all hits?
 By default SyphonX only returns the first hit when `repeated` is `false` (which is the default), but you can easily get all hits.
 
 If you want all hits within a single string specify the `all` option...
