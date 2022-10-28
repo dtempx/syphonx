@@ -1,0 +1,14 @@
+url: https://www.google.com/search?search=${q}
+params:
+  search: meme
+select:
+  - name: search_result
+    repeated: true
+    query: $('#search .g:visible')
+    select:
+      - name: name
+        query: $('[data-header-feature] a h3')
+      - name: excerpt
+        query: $('[data-content-feature]:has(span)')
+      - name: href
+        query: $('[data-header-feature] a')

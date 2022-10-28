@@ -1,14 +1,13 @@
-SyphonX is a simple and powerful way to extract data from anywhere on the web without writing complicated procedural code.
+SyphonX is a simple and powerful way to extract data from any website without writing complicated procedural code.
 
 
 # Get Started
-
 Run the following from the command-line anywhere Node.js is installed...
 ```
-npx syphonx run $/examples/example.json
+npx syphonx run $/examples/example.yaml
 ```
 
-The above command should produce the following output which is the result of extracting information from [this page](https://www.example.com/).
+The above command should produce the following output which is the result of extracting data from [this page](https://www.example.com/).
 ```json
 {
   "name": "Example Domain",
@@ -18,38 +17,29 @@ The above command should produce the following output which is the result of ext
 ```
 
 # How does it work?
+Data was extracted from the page using a template from the cloud, `$/examples/example.yaml` in this case, which can be viewed by running the following command...
 
-Information from the page was extracted using the following template...
 ```
-{
-  "url": "https://www.example.com/",
-  "actions": [
-    {
-      "select": [
-        {
-            "name": "name",
-            "$": [["h1"]]
-        },
-        {
-            "name": "description",
-            "$": [["p"]]
-        },
-        {
-            "name": "href",
-            "$": [["a",["attr","href"]]]
-        }
-      ]
-    }
-  ]
-}
+npx syphonx view $/examples/example.yaml
 ```
 
-This template extracts from the `<h1>`, `<p>` and `<a>` elements on the page and assigns to `name`, `description`, and `href` respectively. The `"$"` properties in the template define how data is extracted, which are basically [jQuery](https://api.jquery.com/) selectors.
+```yaml
+url: https://www.example.com/
+select:
+  - name: name
+    query: $('h1')
+  - name: description
+    query: $('p')
+  - name: href
+    query: $('a').attr('href')
+```
 
-This template was downloaded from the cloud at `$/examples/example.json`, but templates can also be run locally.
+This template uses [jQuery](https://api.jquery.com/) to query the DOM for `<h1>`, `<p>` and `<a>` and assigns to `name`, `description`, and `href` respectively.
+
+Of course the template can be modified and run locally. [Try it now!](documentation/example.md)
 
 
 # Want to know more?
 * [Try some more examples](documentation/install.md)
-* [SyphonX API Documentation](documentation/overview.md)
 * [FAQ](documentation/faq.md)
+* [SyphonX API Documentation](documentation/overview.md)

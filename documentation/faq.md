@@ -1,5 +1,9 @@
-# How do selectors work?
-SyphonX selectors are based on jQuery and expressed using the `"$"` property in a SyphonX template.
+# What does SyphonX stand for?
+**Syphon** stands for *syphoning* data from the web, and **X** stands for *anywhere*. We don't like the term *scraping* by the way because scraping hurts.
+
+
+# How do SyphonX templates work?
+A SyphonX template determines what data is extracted from the HTML and how to shape the resulting output. Data is extracted using jQuery which is expressed using the `"$"` property as shown below.
 
 ```
 {

@@ -1,0 +1,69 @@
+FAQ
+
+Is there a way to conditionalize what data is selected based on what's on the page?
+Use `when`...
+
+Is there a way to pass parameters to a template, to externally drive how data is extracted?
+Use `params`...
+
+Discuss `break`
+
+Discuss `union`
+Discuss `pivot`
+
+repeated
+number type
+boolean type
+object type
+nesting
+returning an array
+
+Is there a way to flag missing required information?
+
+How to test a template?
+
+How to edit templates locally?
+How to push templates to the cloud?
+How to pull templates from the cloud?
+
+What if I need to wait for a pattern of text to show up before selecting?
+
+How to filter nodes (using a selector, a regex, or a formula)
+
+How to drive selection from a set of other selected nodes? (each)
+
+How to split selected text into an array? (split)
+
+How to scroll the page? (scrollBottom)
+How to assign a literal value without selecting from the DOM?
+
+How can I contribute examples to benefit others?
+
+How output merging works
+
+Can I use SyphonX to process offline HTML content?
+
+Integrating with a database
+
+
+List of all actions: break, click, each, repeat, select, snooze, transform, waitfor, yield
+List of all extract errors: 
+click-timeout
+click-required
+error-limit
+eval-error
+external-error
+fatal-error
+invalid-select
+invalid-operator
+invalid-operand
+select-required
+waitfor-timeout
+
+
+List of all jQuery functions
+List of extension jQuery functions: blank, cut, extract, filter, html*, map*, nonblank, replace, replaceHTML, replaceTag, replaceText, replaceWith, reverse, scrollBottom, size, split, text*
+Disallowed jQuery functions: appendTo, each, prependTo, insertBefore, insertAfter, replaceAll
+Regular expressions
+Formulas
+

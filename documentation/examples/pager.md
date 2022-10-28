@@ -7,3 +7,5 @@ Run the following command to view the template for the pager example...
 ```
 npx syphonx view $/examples/pager.json
 ```
+
+[Back to top](/README.md)

@@ -7,3 +7,5 @@ Run the following command to view the template for the infinite-scroller example
 ```
 npx syphonx view $/examples/infinite-scroller.json
 ```
+
+[Back to top](/README.md)

@@ -1,0 +1,28 @@
+{
+    "url": "https://www.google.com/search?q=meme",
+    "actions": [
+        {
+            "select": [
+                {
+                    "name": "search_result",
+                    "repeated": true,
+                    "$": [["#search .g:visible"]],
+                    "select": [
+                        {
+                            "name": "name",
+                            "$": [["[data-header-feature] a h3"]]
+                        },
+                        {
+                            "name": "excerpt",
+                            "$": [["[data-content-feature]:has(span)"]]
+                        },
+                        {
+                            "name": "href",
+                            "$": [["[data-header-feature] a",["attr","href"]]]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

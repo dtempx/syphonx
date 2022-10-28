@@ -1,7 +1,7 @@
 {
   "name": "syphonx",
-  "version": "1.0.28",
-  "description": "SyphonX is a simple and powerful way to extract data from anywhere on the web without writing complicated procedural code",
+  "version": "1.0.29",
+  "description": "SyphonX is a simple and powerful way to extract data from any website without writing complicated procedural code",
   "author": "Dave Templin <dtempx@gmail.com> (https://github.com/dtempx/)",
   "homepage": "https://github.com/dtempx/syphonx",
   "repository": "github:dtempx/syphonx",
@@ -15,23 +15,24 @@
     "syphonx": "./command.js"
   },
   "keywords": [
-    "scrape",
-    "scraper",
+    "automation",
+    "cheerio",
     "crawl",
     "crawler",
-    "spider",
+    "chrome",
+    "dom",
+    "headless",
+    "html",
+    "html2json",
+    "jquery",
     "parse",
     "parser",
     "puppeteer",
-    "chrome",
-    "headless",
-    "automation",
-    "cheerio",
-    "jquery",
-    "web",
-    "html",
-    "html2json",
-    "dom"
+    "scrape",
+    "scraper",
+    "spider",
+    "transform",
+    "web"
   ],
   "files": [
     "**/*.js",
@@ -55,6 +56,7 @@
     "syphonx-core": "^1.0.27",
     "typescript": "^4.8.3",
     "uuid": "^8.3.2",
-    "word-wrap": "^1.2.3"
+    "word-wrap": "^1.2.3",
+    "yaml": "^2.1.3"
   }
 }

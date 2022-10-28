@@ -88,4 +88,4 @@ Run the command again with your own search...
 npx syphonx run $/examples/google.json --url=https://www.google.com/search?q=restaurants+near+me
 ```
 
-[Back to top](../../README.md)
+[Back to top](/README.md)

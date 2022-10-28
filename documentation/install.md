@@ -1,8 +1,7 @@
-
-First let's install SyphonX locally to speed things up...
+First let's install SyphonX locally to speed things up—so we don't have to download the command every time we run it...
 ```bash
-mkdir test1
-cd test1
+mkdir temp
+cd temp
 npm init -y
 npm install syphonx
 ```

@@ -1,0 +1,21 @@
+{
+    "url": "https://www.amazon.com/dp/B004GCJEZU/",
+    "actions": [
+        {
+            "select": [
+                {
+                    "name": "name",
+                    "$": [["#title"]]
+                },
+                {
+                    "name": "price",
+                    "$": [["#buybox .a-price .a-offscreen"]]
+                },
+                {
+                    "name": "availability",
+                    "$": [["#availability"]]
+                }
+            ]
+        }
+    ]
+}
