@@ -34,4 +34,9 @@ This should produce the following output...
 }
 ```
 
+Try some more examples...
+* [Google Search](google-search.md)
+* [Amazon Product Page](amazon-product-page.md)
+
+
 [Back to top](/README.md)

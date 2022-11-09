@@ -11,8 +11,9 @@ dotenv.config();
 const command = process.argv[2];
 const help = `Usage: syphonx <command> [<args>]
 Available commands:
-  run      runs a script to syphon data from a webpage
-  view     views a script from the cloud
+  run      Runs a script to syphon data from a webpage
+  view     Views a script from the cloud
+  pull     Pull templates from the cloud
 
 syhponx <command> --help  for more information on a specific command
 syphonx --version  displays the current syphonx version

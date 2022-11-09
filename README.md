@@ -19,6 +19,7 @@ Data was extracted from the page using a template from the cloud, `$/examples/we
 npx syphonx view $/examples/weather.yaml
 ```
 
+Here is what the template looks like...
 ```yaml
 url: https://weather.com/weather/today/
 select: "[data-testid='CurrentConditionsContainer']"
@@ -28,8 +29,6 @@ This template uses a ["CSS Selector"](https://www.w3schools.com/cssref/css_selec
 
 Of course the template can be modified and run locally. [Try it now!](documentation/examples/weather.md)
 
-
 # Want to know more?
-* [Try some more examples](documentation/install.md)
 * [FAQ](documentation/faq.md)
 * [SyphonX API Documentation](documentation/overview.md)

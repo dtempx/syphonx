@@ -1,6 +1,6 @@
 Run the command below to extract information from a Google search: https://www.google.com/search?q=meme
 ```
-npx syphonx run $/examples/google.json
+npx syphonx run $/examples/google/search.yaml
 ```
 
 This should produce output similar to the following...
@@ -74,7 +74,9 @@ select:
         query: $('[data-header-feature] a').href()
 ```
 
-Run the command again with your own search...
+Notice the `search_result` is a repeated object with a CSS selector that sets the context for multiple search results to be retrieved. Each search result is extracted with the `name` and `excerpt` properties retrieved using a CSS selector and the `href` property using a jQuery selector to grab the HTML attribute.
+
+This template is parameter-driven so you can run the command again with your own search query...
 ```
 npx syphonx run $/examples/google/search.yaml --params="{search:'restaurants near me'}"
 ```

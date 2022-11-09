@@ -1,4 +1,4 @@
-import { Click, Select, SelectQuery, Transform, WaitFor } from "syphonx-core";
+import * as syphonx from "syphonx-core";
 import { Template } from "./template.js";
 import { ErrorMessage } from "./utilities.js";
 import jsep, { Expression, CallExpression, MemberExpression } from "jsep";
@@ -32,7 +32,7 @@ function addTransformAction(template: Template, obj: unknown) {
     else if (obj instanceof Array)
         template.actions.push({ transform: obj.map(obj => ({ $: parseSingleQuery(obj) })) });
     else if (typeof obj === "object" && obj !== null)
-        template.actions.push({ transform: convertTransform(obj as Record<string, unknown>) });
+        template.actions.push({ transform: [convertTransform(obj as Record<string, unknown>)] });
     else
         throw new ErrorMessage("Invalid transform action");
 }
@@ -41,18 +41,55 @@ function addWaitForAction(template: Template, obj: unknown) {
     if (typeof obj === "string")
         template.actions.push({ waitfor: { $: parseMultiQuery(obj) } });
     else if (typeof obj === "object" && obj !== null)
-        template.actions.push({ waitfor: convertWaitFor(obj as Record<string, unknown>) });
+        template.actions.push(convertWaitFor(obj as Record<string, unknown>));
     else
     throw new ErrorMessage("Invalid click action");
 }
 
-function convertClick(obj: Record<string, unknown>): Click {
-    const {query, ...click} = obj;
-    click.$ = parseMultiQuery(query);
-    return click as unknown as Click;
+function convertActions(actions: unknown): syphonx.Action[] {
+    if (actions instanceof Array) {
+        return actions.map(action => {
+            if (action.select)
+                return { select: convertSelect(action.select) };
+            else if (action.click)
+                return { click: convertClick(action.click) };
+            else if (action.transform)
+                return { transform: convertTransform(action.transform) };
+            else if (action.waitfor)
+                return convertWaitFor(action.waitfor);
+            else if (action.each)
+                return convertEach(action.each);
+            else if (action.repeat)
+                return convertRepeat(action.repeat);
+            else
+                return action;
+        });    
+    }
+    else {
+        return [];
+    }
 }
 
-function convertSelect(obj: Record<string, unknown>): Select {
+function convertClick(obj: Record<string, unknown>): syphonx.Click {
+    const {query, ...click} = obj;
+    click.$ = parseMultiQuery(query);
+    return click as unknown as syphonx.Click;
+}
+
+function convertEach(obj: Record<string, unknown>): syphonx.EachAction {
+    const {query, actions, ...each} = obj;
+    each.$ = parseMultiQuery(query);
+    each.actions = convertActions(actions);
+    return { each } as unknown as syphonx.EachAction;
+}
+
+function convertRepeat(obj: Record<string, unknown>): syphonx.RepeatAction {
+    const {actions, ...repeat} = obj;
+    repeat.actions = convertActions(actions);
+    return { repeat } as unknown as syphonx.RepeatAction;
+}
+
+function convertSelect(obj: Record<string, unknown>): syphonx.Select {
     const {query, ...select} = obj;
     select.$ = parseMultiQuery(query);
     if (select.select instanceof Array)
@@ -60,19 +97,19 @@ function convertSelect(obj: Record<string, unknown>): Select {
     return select;
 }
 
-function convertTransform(obj: Record<string, unknown>): Transform[] {
+function convertTransform(obj: Record<string, unknown>): syphonx.Transform {
     const {query, ...transform} = obj;
-    const $$ = parseMultiQuery(query);
-    return $$.map($ => ({ $ }));
+    transform.$ = parseSingleQuery(query);
+    return transform as unknown as syphonx.Transform;
 }
 
-function convertWaitFor(obj: Record<string, unknown>): WaitFor {
+function convertWaitFor(obj: Record<string, unknown>): syphonx.WaitForAction {
     const {query, ...waitfor} = obj;
     waitfor.$ = parseMultiQuery(query);
-    return waitfor;
+    return { waitfor };
 }
 
-function parseMultiQuery(obj: unknown): SelectQuery[] {
+function parseMultiQuery(obj: unknown): syphonx.SelectQuery[] {
     if (typeof obj === "string") {
         if (obj.startsWith("$("))
             return [parseJQueryExpression(obj)];
@@ -84,7 +121,7 @@ function parseMultiQuery(obj: unknown): SelectQuery[] {
     }
 }
 
-function parseSingleQuery(obj: unknown): SelectQuery {
+function parseSingleQuery(obj: unknown): syphonx.SelectQuery {
     if (typeof obj === "string") {
         if (obj.startsWith("$("))
             return parseJQueryExpression(obj);
@@ -96,7 +133,7 @@ function parseSingleQuery(obj: unknown): SelectQuery {
     }
 }
 
-function parseJQueryExpression(text: string): SelectQuery {
+function parseJQueryExpression(text: string): syphonx.SelectQuery {
     const result = [];
     let expression: Expression | undefined = jsep(text);
     while (expression) {
@@ -116,13 +153,13 @@ function parseJQueryExpression(text: string): SelectQuery {
             }
         }
     }
-    return result as SelectQuery;
+    return result as syphonx.SelectQuery;
 }
 
 export function yamlToJson(obj: any) {
     const template: Template = {
         url: obj.url,
-        actions: obj.actions instanceof Array ? obj.actions : []
+        actions: obj.actions instanceof Array ? convertActions(obj.actions) : []
     };
     if (obj.click)
         addClickAction(template, obj.click);

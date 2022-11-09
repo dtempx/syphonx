@@ -1,4 +1,4 @@
-Run the command below to extract information from an Amazon product-page: https://www.amazon.com/dp/${B081FGTPB7}/
+Run the command below to extract information from an Amazon product-page: https://www.amazon.com/dp/B081FGTPB7/
 ```
 npx syphonx run $/examples/amazon/product-page.yaml
 ```
@@ -26,7 +26,9 @@ select:
     query: "#availability:first"
 ```
 
-Run the command again with your own product...
+The `name` is extracted from an element with an id of `title`, and `price` is extracted from an element with a class of `a-offscreen` that is contained within an element with a class of `a-price` that is further contained within an element with an id of `buybox`.
+
+This template is parameter-driven so you can run the command again with your own ASIN product number...
 ```
 npx syphonx run $/examples/amazon/product-page.yaml --params="{asin:'B0787D6SGQ'}"
 ```

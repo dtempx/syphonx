@@ -23,12 +23,31 @@ node command run test.json --out=data,log
 node command run test.json test.html
 node command run test.json test.html --out=data,log
 node command run test.json --offline
+```
 
-node command run examples/example.yaml
-node command view $/examples/weather.yaml
+# Test JSON Templates
+```
+node command run examples/example.json
+node command run examples/amazon.json
+node command run examples/google.json
+node command run $/examples/example.json
 ```
 
 
+# Test YAML Templates
+```
+node command run examples/example.yaml
+node command run examples/example2.yaml
+node command run examples/weather.yaml
+node command run examples/weather2.yaml
+node command run examples/google/search.yaml
+node command run examples/google/search.yaml --params="{search:'restaurants near me'}"
+node command run examples/amazon/product-page.yaml
+node command run examples/amazon/product-page.yaml --params="{asin:'B0787D6SGQ'}"
+node command run $/examples/weather.yaml
+node command view $/examples/weather.yaml
+node command view $/examples/weather.yaml --json
+```
 
 
 ## Deploy
