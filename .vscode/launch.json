@@ -5,12 +5,16 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "pwa-node",
+            "type": "node",
             "request": "launch",
             "name": "Launch Program",
             //"program": "${file}",
             "program": "${workspaceFolder}/command.js",
-            "args": ["run", "private/test1.json", "--offline"],
+            //"args": ["run", "examples/example.yaml", "--offline"],
+            //"args": ["run", "examples/amazon/product-page.yaml", "--offline"],
+            //"args": ["run", "examples/google/search.yaml"],
+            //"args": ["view", "$/examples/example.json"],
+            "args": ["pull", "$/examples/example.yaml"],
             //"args": ["${workspaceFolder}/scripts/ikaun/burr/people.json", "--url=https://www.burr.com/attorney/andrea-weed-dorgan/"],
             //"console": "externalTerminal", // WORKAROUND https://stackoverflow.com/questions/41100916/node-js-readline-in-debug-console-in-visual-studio-code
             "outputCapture": "std", // WORKAROUND https://github.com/microsoft/vscode/issues/19750

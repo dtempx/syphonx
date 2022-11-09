@@ -1,42 +1,32 @@
-SyphonX is a simple and powerful way to extract data from any website without writing complicated procedural code.
+SyphonX is the easiest way to extract data from any website without coding.
 
 
 # Get Started
 Run the following from the command-line anywhere Node.js is installed...
 ```
-npx syphonx run $/examples/example.yaml
+npx syphonx run $/examples/weather.yaml
 ```
 
-The above command should produce the following output which is the result of extracting data from [this page](https://www.example.com/).
+The above command should produce an output similar to the below which is the result of extracting the current weather conditions from https://weather.com/weather/today/.
 ```json
-{
-  "name": "Example Domain",
-  "description": "This domain is for use in illustrative examples in documents. You may use this\ndomain in literature without prior coordination or asking for permission.\nMore information...",
-  "href": "https://www.iana.org/domains/example"
-}
+"Anaheim, CA As of 6:55 pm PST 54° Cloudy Day 67° • Night 49° Cloudy alertLevel2 Gale Warning +6 More"
 ```
 
 # How does it work?
-Data was extracted from the page using a template from the cloud, `$/examples/example.yaml` in this case, which can be viewed by running the following command...
+Data was extracted from the page using a template from the cloud, `$/examples/weather.yaml` in this case, which can be viewed by running the following command...
 
 ```
-npx syphonx view $/examples/example.yaml
+npx syphonx view $/examples/weather.yaml
 ```
 
 ```yaml
-url: https://www.example.com/
-select:
-  - name: name
-    query: $('h1')
-  - name: description
-    query: $('p')
-  - name: href
-    query: $('a').attr('href')
+url: https://weather.com/weather/today/
+select: "[data-testid='CurrentConditionsContainer']"
 ```
 
-This template uses [jQuery](https://api.jquery.com/) to query the DOM for `<h1>`, `<p>` and `<a>` and assigns to `name`, `description`, and `href` respectively.
+This template uses a ["CSS Selector"](https://www.w3schools.com/cssref/css_selectors.php) to query the DOM for an element with a `data-testid` attribute equal to `CurrentConditionsContainer` and returns the result.
 
-Of course the template can be modified and run locally. [Try it now!](documentation/example.md)
+Of course the template can be modified and run locally. [Try it now!](documentation/examples/weather.md)
 
 
 # Want to know more?

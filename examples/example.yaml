@@ -1,8 +1,2 @@
 url: https://www.example.com/
-select:
-  - name: name
-    query: $('h1')
-  - name: description
-    query: $('p')
-  - name: href
-    query: $('a').attr('href')
+select: "h1"

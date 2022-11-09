@@ -8,6 +8,7 @@ npm install syphonx
 
 Try some more examples...
 * [Google Search](examples/google-search.md)
+* [Amazon Product Page](examples/amazon-product-page.md)
 
 
 [Back to top](../README.md)

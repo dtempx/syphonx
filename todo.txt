@@ -1,3 +1,7 @@
+report number of retries attempted in log summary
+retry if blocked
+
+
 csv mode that converts html from a csv file using streams (see Transforming a CSV file to another CSV file in Node.js at https://techsparx.com/nodejs/howto/csv-transformation.html)
 
 retries with backoff delay

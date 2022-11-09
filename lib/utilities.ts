@@ -1,3 +1,10 @@
+export class ErrorMessage {
+    message: string;
+    constructor(message: string) {
+        this.message = message;
+    }
+}
+
 export function combineUrl(url: string, path: string): string {
     if (url && path) {
         return `${rtrim(url, "/")}/${ltrim(path, "/")}`;
@@ -11,6 +18,14 @@ export function combineUrl(url: string, path: string): string {
     else {
         return "";
     }
+}
+
+export function evaluateFormula(expression: string, args: Record<string, unknown> = {}): unknown {
+    const keys = Object.keys(args);
+    const values = keys.map(key => args[key]);
+    const fn = new Function(...keys, `return ${expression}`);
+    const result = fn(...values);
+    return result;
 }
 
 export function empty(value: unknown): boolean {

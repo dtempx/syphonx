@@ -1,0 +1,10 @@
+url: https://www.amazon.com/dp/${asin}/
+params:
+  asin: B081FGTPB7
+select:
+  - name: name
+    query: "#title"
+  - name: price
+    query: "#buybox .a-price .a-offscreen:first"
+  - name: availability
+    query: "#availability:first"

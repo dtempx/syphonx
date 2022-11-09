@@ -1,12 +1,12 @@
 import { default as runQuery } from "./run-query.js";
 import { default as runUrl } from "./run-url.js";
-import { parseArgs } from "./common/index.js";
+import { parseArgs } from "./lib/index.js";
 
 export default async function () {
     const args = parseArgs({
         optional: {
             0: "commmand",
-            1: "syphonx extract script file",
+            1: "template file",
             2: "html file for offline processing",
             url: "specifies a url to fetch",
             show: "shows browser window",

@@ -23,7 +23,13 @@ node command run test.json --out=data,log
 node command run test.json test.html
 node command run test.json test.html --out=data,log
 node command run test.json --offline
+
+node command run examples/example.yaml
+node command view $/examples/weather.yaml
 ```
+
+
+
 
 ## Deploy
 ```

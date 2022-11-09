@@ -1,0 +1,2 @@
+url: https://weather.com/weather/today/
+select: "[data-testid='CurrentConditionsContainer']"

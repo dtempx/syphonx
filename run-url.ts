@@ -1,10 +1,11 @@
 import * as syphonx from "syphonx-core";
 import * as fs from "fs";
-import { insert, offline, online, store, subset, tryParseJSON, Script } from "./common/index.js";
+import JSON5 from "json5";
+import { insert, offline, online, loadTemplate, subset, Template } from "./lib/index.js";
 
 export default async function (args: Record<string, string>): Promise<void> {
-    const script: Script = args[1] ? await store.load(args[1]) : { actions: [] };
-    const url = args.url || script.url;
+    const template: Template = args[1] ? await loadTemplate(args[1]) : { actions: [] };
+    const url = args.url || template.url;
     if (!url && !args[2]) {
         console.log("url not specified");
         process.exit(1);
@@ -12,9 +13,9 @@ export default async function (args: Record<string, string>): Promise<void> {
 
     const output = args.out ? args.out.split(",") : ["data"];
     const debug = output.includes("log");
-    const params = { ...script.params, ...tryParseJSON(args.params, false) };
+    const params = { ...template.params, ...(args.params ? JSON5.parse(args.params) : undefined) };
 
-    const dataset = script.key ? script.key.split("/").filter(text => text.length > 0)[0] : "";
+    const dataset = template.key ? template.key.split("/").filter(text => text.length > 0)[0] : "";
     const table = "syphonx";
 
     let result: Partial<syphonx.ExtractResult>;
@@ -22,13 +23,13 @@ export default async function (args: Record<string, string>): Promise<void> {
         const pause = args.pause === "1" ? "before" : (args.pause as "before" | "after" | "both" | undefined);
         const show = !!args.show || !!pause;
         result = await online({
-            ...script,
+            ...template,
             url: url!,
             params,
             show,
             pause,
             debug,
-            timeout: parseInt(args.timeout) || script.timeout,
+            timeout: parseInt(args.timeout) || template.timeout,
             offline: !!args.offline,
             browserOptions: {}, // todo: not supported yet
             includeDOMRefs: false,
@@ -38,7 +39,7 @@ export default async function (args: Record<string, string>): Promise<void> {
     else {
         const html = fs.readFileSync(args[2], "utf8");
         result = await offline({
-            ...script,
+            ...template,
             html,
             url,
             params,
@@ -49,7 +50,7 @@ export default async function (args: Record<string, string>): Promise<void> {
 
     if (args.insert) {
         if (result.ok || args.onerror === "insert") {
-            const id = await insert({ dataset, table, key: script.key || "default", tag: args.tag, result });
+            const id = await insert({ dataset, table, key: template.key || "default", tag: args.tag, result });
             console.log(`${id} inserted to ${dataset}.${table}`);
         }
     }

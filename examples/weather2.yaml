@@ -1,0 +1,6 @@
+url: https://weather.com/weather/today/
+select:
+  - name: temperature
+    query: "[data-testid='TemperatureValue']:first"
+  - name: conditions
+    query: "[data-testid='wxPhrase']"
