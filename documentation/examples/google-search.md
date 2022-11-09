@@ -76,9 +76,9 @@ select:
 
 Notice the `search_result` is a repeated object with a CSS selector that sets the context for multiple search results to be retrieved. Each search result is extracted with the `name` and `excerpt` properties retrieved using a CSS selector and the `href` property using a jQuery selector to grab the HTML attribute.
 
-This template is parameter-driven so you can run the command again with your own search query...
+This template is parameter-driven so you can run the command again with with a different search query...
 ```
-npx syphonx run $/examples/google/search.yaml --params="{search:'restaurants near me'}"
+npx syphonx run $/examples/google/search.yaml --params="{search:'restaurants'}"
 ```
 
 [Back to top](/README.md)
