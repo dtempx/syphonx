@@ -19,7 +19,7 @@ select:
   ...
   - name: people_also_ask
     repeated: true
-    query: $('span:contains("People also ask")').closest('[data-initq]').find('[data-q] span')
+    query: $('span:contains("People also ask")').closest('[data-initq]').find('[data-q] [role=button]').filter('/\\?$/')
 ```
 
 This one's a bit trickier as there aren't any attributes in the DOM with semantic meaning that make it easy for us. We're going to have to get a little more advanced. At the time of this writing, the questions can be targeted with a `data-q` attribute. This `data-q` attribute might be used for other things, so let's try to pick up on the text of *"People also ask"* to find the container for the `data-q` nodes. The good news is we can handle this using a jQuery selector.
@@ -27,7 +27,9 @@ This one's a bit trickier as there aren't any attributes in the DOM with semanti
 The jQuery selector `$('span:contains("People also ask")').closest('[data-initq]').find('[data-q] span')` basically does the following.
 1. Find the node that contains the text `People also ask`.
 2. Find the containing parent node with a `data-initq` attribute that looks like `<div class="data-initq">...</div>`.
-3. Find all the child nodes with a `data-q` attribute that look like `<div class="data-q">...</div>`, and select the contained `<span>...<span>` element.
+3. Find all the child nodes with a `data-q` attribute that looks like `<div class="data-q">...</div>`
+4. Select the contained node with a `role` attribute equal to `button` that looks like `<div role='button'>...</div>`.
+5. Filter the results by removing hits that don't end in a question mark to preven other junk data that sometimes comes through. That's a regular expression inside the filter in case you're wondering.
 
 The full template should now look like the following (with the `description` from the [previous example](google-search-2.md)).
 ```yaml
@@ -47,6 +49,9 @@ select:
         query: "[data-content-feature]:has(span)"
       - name: href
         query: $('[data-header-feature] a').attr('href')
+  - name: people_also_ask
+    repeated: true
+    query: $('span:contains("People also ask")').closest('[data-initq]').find('[data-q] [role=button]').filter('/\\?$/')
 ```
 
 Run the template and we should see the new `people_also_ask` data in the output.

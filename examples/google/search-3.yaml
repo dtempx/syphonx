@@ -16,4 +16,4 @@ select:
         query: $('[data-header-feature] a').attr('href')
   - name: people_also_ask
     repeated: true
-    query: $('span:contains("People also ask")').closest('[data-initq]').find('[data-q] span')
+    query: $('span:contains("People also ask")').closest('[data-initq]').find('[data-q] [role=button]').filter('/\\?$/')
