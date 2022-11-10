@@ -1,6 +1,6 @@
 We can extend the [Google search example](google-search.md) to extract the questions that appear under *"People also ask"* as highlighted below.
 
-![screenshot](images/google-search-3.png)
+<kbd><img src="images/google-search-3.png" /></kbd>
 
 If you just want to see the solution, here is a revised template that does this.
 ```

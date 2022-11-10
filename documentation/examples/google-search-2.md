@@ -1,6 +1,6 @@
 We can extend the [Google search example](google-search.md) to extract the description that appears above the search results highlighted below.
 
-![screenshot](images/google-search-2.png)
+<kbd><img src="images/google-search-2.png" /></kbd>
 
 If you just want to see the solution, here is a revised template that does this.
 ```
