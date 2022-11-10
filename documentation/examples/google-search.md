@@ -27,7 +27,7 @@ This should produce output similar to the following...
       "excerpt": "Know Your Meme is a website dedicated to documenting Internet phenomena: viral videos, image macros, catchphrases, web celebs and more.",
       "href": "https://knowyourmeme.com/"
     },
-    ...
+    // ...
   ]
 }
 ```
@@ -62,6 +62,6 @@ This template is parameter-driven so you can run the command again with with a d
 npx syphonx run $/examples/google/search.yaml --params="{search:'restaurants'}"
 ```
 
-What if you wanted to extract the description that appears above the search results, or the **People also ask** section? [Continue](google-search-2.md)
+What if you wanted to extract the description that appears above the search results, or the *"People also ask"* section? [Continue](google-search-2.md)
 
 [Back to top](/README.md)
