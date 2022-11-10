@@ -6,7 +6,7 @@ npm init -y
 npm install syphonx
 ```
 
-Run the following command to download a template from the cloud...
+Run the following command to download the template from the cloud...
 ```
 npx syphonx pull $/examples/weather.yaml
 ```
@@ -32,6 +32,12 @@ This should produce the following output...
   "temperature": "54°",
   "conditions": "Cloudy"
 }
+```
+
+Here is the revised template for reference...
+```
+npx syphonx view $/examples/weather-2.yaml
+npx syphonx run $/examples/weather-2.yaml
 ```
 
 Try some more examples...

@@ -27,34 +27,15 @@ This should produce output similar to the following...
       "excerpt": "Know Your Meme is a website dedicated to documenting Internet phenomena: viral videos, image macros, catchphrases, web celebs and more.",
       "href": "https://knowyourmeme.com/"
     },
-    {
-      "name": "What Is a Meme? - Lifewire",
-      "excerpt": "Sep 16, 2022 — A meme is a virally transmitted image embellished with text, usually sharing pointed commentary on cultural symbols, social ideas, ...",
-      "href": "https://www.lifewire.com/what-is-a-meme-2483702"
-    },
-    {
-      "name": "Search & Discover Funny Memes, Photos & Videos | Memes",
-      "excerpt": "Memes is your source for the best & newest Memes , Funny Pictures, and hilarious videos. Find memes or make them with our Meme Generator.",
-      "href": "https://memes.com/"
-    },
-    {
-      "name": "meme | Definition, Meaning, History, & Facts | Britannica",
-      "excerpt": "Oct 4, 2022 — meme , unit of cultural information spread by imitation. The term meme (from the Greek mimema, meaning “imitated”) was introduced in 1976 by ...",
-      "href": "https://www.britannica.com/topic/meme"
-    },
-    {
-      "name": "Meme Definition & Meaning - Dictionary.com",
-      "excerpt": "meme · a cultural item that is transmitted by repetition and replication in a manner analogous to the biological transmission of genes. · a cultural item in the ...",
-      "href": "https://www.dictionary.com/browse/meme"
-    },
-    {
-      "name": "The Meaning and History of Memes - The New York Times",
-      "excerpt": "Feb 14, 2022 — Webster's New World College Dictionary defines a meme as “a concept, belief, or practice conceived as a unit of cultural information that may be ...",
-      "href": "https://www.nytimes.com/2022/01/26/crosswords/what-is-a-meme.html"
-    }
+    ...
   ]
 }
 ```
+
+The output should reflect the selected content on the page...
+![screenshot](images/google-search.png)
+
+> Of course Google has an API for this, but we're just learning here.
 
 Here is the template that produced this result...
 ```yaml
@@ -80,5 +61,7 @@ This template is parameter-driven so you can run the command again with with a d
 ```
 npx syphonx run $/examples/google/search.yaml --params="{search:'restaurants'}"
 ```
+
+What if you wanted to extract the description that appears above the search results, or the **People also ask** section? [Continue](google-search-2.md)
 
 [Back to top](/README.md)

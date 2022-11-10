@@ -53,7 +53,7 @@ export async function online({ retries = 0, onRetry, ...options}: OnlineOptions)
         result = await tryOnline(options);
         if (result.ok)
             break;
-        if (!result.errors?.some(error => ["select-timeout", "external-error", "waitfor-timeout"].includes(error.code)))
+        if (retry >= retries || !result.errors?.some(error => ["select-timeout", "external-error", "waitfor-timeout"].includes(error.code)))
             break;
         if (onRetry)
             await onRetry({ retry: ++retry, retries, result });

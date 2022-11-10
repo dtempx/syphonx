@@ -1,0 +1,16 @@
+url: https://www.google.com/search?q=${search}
+params:
+  search: meme
+select:
+  - name: description
+    query: "[data-attrid='wa:/description']"
+  - name: search_result
+    repeated: true
+    query: "#search .g:has([data-header-feature])"
+    select:
+      - name: name
+        query: "[data-header-feature] a h3"
+      - name: excerpt
+        query: "[data-content-feature]:has(span)"
+      - name: href
+        query: $('[data-header-feature] a').attr('href')

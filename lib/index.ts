@@ -2,6 +2,7 @@ export * from "./args.js";
 export * from "./offline.js";
 export * from "./online.js";
 export * from "./template.js";
+export * from "./uid.js";
 export * from "./utilities.js";
 export * from "./version.js";
 

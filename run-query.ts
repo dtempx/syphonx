@@ -31,19 +31,19 @@ export default async function (args: Record<string, string>): Promise<void> {
         const file = path.resolve(`${root}${key}.json`);
         try {
             templates[key] = await loadTemplate(file);
-            console.log(`SCRIPT LOADED: ${file}`);
+            console.log(`TEMPLATE LOADED: ${file}`);
         }
         catch (err) {
-            console.error(`SCRIPT ERROR: ${file}: ${err instanceof Error ? err.message : err}`);
+            console.error(`TEMPLATE ERROR: ${file}: ${err instanceof Error ? err.message : err}`);
             process.exit(1);
         }
     }
 
     const ok = rows.every(row => {
-        const script = templates[row.key];
-        if (!row.key && !script.key)
+        const template = templates[row.key];
+        if (!row.key && !template.key)
             return false;
-        else if (!row.url && !script.url)
+        else if (!row.url && !template.url)
             return false;
         return true;
     });
@@ -62,6 +62,9 @@ export default async function (args: Record<string, string>): Promise<void> {
     let errors = 0;
     let consecutiveErrors = 0;
     let retryCount = 0;
+    let tmin = Infinity;
+    let tmax = 0;
+    let tavg = 0;
 
     const t0 = new Date().valueOf();
     await async.each(rows, async row => {
@@ -89,22 +92,25 @@ export default async function (args: Record<string, string>): Promise<void> {
                     const a = args.snooze ? args.snooze.split(",").map(value => parseInt(value)) : [10, 60];
                     const t = randomize(a[0], a[1]);
                     const [error] = result.errors || [];
-                    console.log(`${url} retry #${retry}/${retries}\nERROR: ${error?.message}\nsnoozing for ${Math.ceil(t)} seconds...`);
+                    console.log(`ERROR ${url}\n${error?.message}\nRETRY #${retry}/${retries}, snoozing for ${Math.ceil(t)} seconds...`);
                     await sleep(t * 1000);
                     retryCount += 1;
                 }
             });
-
             if (result.ok || args.onerror === "insert") {
                 const id = await insert({ dataset, table, key, tag, result });
                 succeeded += 1;
                 const t2 = new Date().valueOf();
-                console.log(`[${++i}/${rows.length}] ${url} inserted to ${dataset}.${table} id=${id} t=${t2 - t1}ms ${!result.ok ? `ok=false (${result.errors?.length} errors)` : "ok=true"}`);
+                const elapsed = t2 - t1;
+                console.log(`[${++i}/${rows.length}] ${url} inserted to ${dataset}.${table} key=${key} id=${id} t=${((elapsed) / 1000).toFixed(1)}s${!result.ok ? ` (${result.errors?.length} errors)` : ""}`);
+                tmin = elapsed < tmin ? elapsed : tmin;
+                tmax = elapsed > tmax ? elapsed : tmax;
+                tavg = (tavg + elapsed) / 2;
             }
             else {
                 skipped += 1;
                 const t2 = new Date().valueOf();
-                console.log(`[${++i}/${rows.length}] ${url} skipped t=${t2 - t1}ms\n${result.errors?.map(error => JSON.stringify(error)).join("\n")}`);
+                console.log(`[${++i}/${rows.length}] ${url} t=${((t2 - t1) / 1000).toFixed(1)}s SKIPPED\nERROR ${result.errors?.map(error => JSON.stringify(error)).join("\n")}`);
             }
 
             if (result.ok) {
@@ -124,7 +130,6 @@ export default async function (args: Record<string, string>): Promise<void> {
             }
         }
         catch (err) {
-            console.error(`[${++i}/${rows.length}] ${url} failed\nERROR: ${err instanceof Error ? err.message : err}`);
             if (args.onerror === "insert") {
                 const { domain, origin } = parseUrl(url);
                 const result = {
@@ -139,7 +144,10 @@ export default async function (args: Record<string, string>): Promise<void> {
                 };
                 const id = await insert({ dataset, table, key, tag, result });
                 const t2 = new Date().valueOf();
-                console.log(`[${i}/${rows.length}] ${id} inserted to ${dataset}.${table} id=${id} t=${t2 - t1}ms ok=false`);
+                console.log(`[${++i}/${rows.length}] ${id} inserted to ${dataset}.${table} key=${key} id=${id} t=${((t2 - t1) / 1000).toFixed(1)}s ok=false\nERROR ${err instanceof Error ? err.message : err}`);
+            }
+            else {
+                console.error(`[${++i}/${rows.length}] ${url} ok=false\nERROR: ${err instanceof Error ? err.message : err}`);
             }
             failed += 1;
         }
@@ -152,7 +160,7 @@ export default async function (args: Record<string, string>): Promise<void> {
         console.error(`${maxConsecutiveErrors} consecutive errors exceeded`);
 
     const t3 = new Date().valueOf();
-    console.log(`${succeeded} inserted, ${failed} failed, ${skipped} skipped, ${retryCount} retries (${((t3 - t0) / 60000).toFixed(1)} min)`);
+    console.log(`${succeeded} inserted, ${failed} failed, ${skipped} skipped, ${retryCount} retries, ${tmin.toFixed(1)} min, ${tmax.toFixed(1)} max, ${tavg.toFixed(1)} avg, ${((t3 - t0) / 60000).toFixed(1)} min`);
 
     if (args.after && succeeded > 0) {
         const query = args.after.includes(" ") ? args.after : `CALL ${args.after}()`;

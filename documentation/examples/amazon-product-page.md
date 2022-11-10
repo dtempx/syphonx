@@ -7,10 +7,13 @@ This should produce output similar to the following...
 ```json
 {
   "name": "Amazon Basics AA 1.5 Volt Performance Alkaline Batteries - Pack of 8",
-  "price": "$7.34",
+  "price": "$6.96",
   "availability": "In Stock."
 }
 ```
+
+The output should reflect the selected content on the page...
+![screenshot](images/amazon-product-page.png)
 
 Here is the template that produced this result...
 ```yaml

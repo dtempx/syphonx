@@ -1,6 +1,6 @@
-import * as uuid from "uuid";
 import { BigQuery } from "@google-cloud/bigquery";
 import { ExtractResult } from "syphonx-core";
+import { uid } from "./uid.js";
 
 const bigquery = new BigQuery();
 
@@ -13,7 +13,7 @@ interface InsertParams {
     result: Partial<ExtractResult>
 }
 
-export default async function({ dataset, table, id = uuid.v4(), key, tag, result }: InsertParams): Promise<string> {
+export default async function({ dataset, table, id = uid(), key, tag, result }: InsertParams): Promise<string> {
     await bigquery.dataset(dataset).table(table).insert([{
         timestamp: new Date(),
         id,

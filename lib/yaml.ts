@@ -41,7 +41,7 @@ function addWaitForAction(template: Template, obj: unknown) {
     if (typeof obj === "string")
         template.actions.push({ waitfor: { $: parseMultiQuery(obj) } });
     else if (typeof obj === "object" && obj !== null)
-        template.actions.push(convertWaitFor(obj as Record<string, unknown>));
+        template.actions.push(convertWaitForAction(obj as Record<string, unknown>));
     else
     throw new ErrorMessage("Invalid click action");
 }
@@ -50,17 +50,17 @@ function convertActions(actions: unknown): syphonx.Action[] {
     if (actions instanceof Array) {
         return actions.map(action => {
             if (action.select)
-                return { select: convertSelect(action.select) };
+                return convertSelectAction(action.select);
             else if (action.click)
-                return { click: convertClick(action.click) };
+                return convertClickAction(action.click);
             else if (action.transform)
-                return { transform: convertTransform(action.transform) };
+                return convertTransformAction(action.transform);
             else if (action.waitfor)
-                return convertWaitFor(action.waitfor);
+                return convertWaitForAction(action.waitfor);
             else if (action.each)
-                return convertEach(action.each);
+                return convertEachAction(action.each);
             else if (action.repeat)
-                return convertRepeat(action.repeat);
+                return convertRepeatAction(action.repeat);
             else
                 return action;
         });    
@@ -76,14 +76,19 @@ function convertClick(obj: Record<string, unknown>): syphonx.Click {
     return click as unknown as syphonx.Click;
 }
 
-function convertEach(obj: Record<string, unknown>): syphonx.EachAction {
+function convertClickAction(obj: Record<string, unknown>): syphonx.ClickAction {
+    const click = convertClick(obj);
+    return { click };
+}
+
+function convertEachAction(obj: Record<string, unknown>): syphonx.EachAction {
     const {query, actions, ...each} = obj;
     each.$ = parseMultiQuery(query);
     each.actions = convertActions(actions);
     return { each } as unknown as syphonx.EachAction;
 }
 
-function convertRepeat(obj: Record<string, unknown>): syphonx.RepeatAction {
+function convertRepeatAction(obj: Record<string, unknown>): syphonx.RepeatAction {
     const {actions, ...repeat} = obj;
     repeat.actions = convertActions(actions);
     return { repeat } as unknown as syphonx.RepeatAction;
@@ -97,13 +102,29 @@ function convertSelect(obj: Record<string, unknown>): syphonx.Select {
     return select;
 }
 
+function convertSelectAction(objs: Record<string, unknown>[]): syphonx.SelectAction {
+    const select = objs.map(obj => {
+        const { query, ...select } = obj;
+        select.$ = parseMultiQuery(query);
+        if (select.select instanceof Array)
+            select.select = select.select.map(obj => convertSelect(obj));
+        return select;        
+    });
+    return { select };
+}
+
 function convertTransform(obj: Record<string, unknown>): syphonx.Transform {
     const {query, ...transform} = obj;
     transform.$ = parseSingleQuery(query);
     return transform as unknown as syphonx.Transform;
 }
 
-function convertWaitFor(obj: Record<string, unknown>): syphonx.WaitForAction {
+function convertTransformAction(objs: Record<string, unknown>[]): syphonx.TransformAction {
+    const transform = objs.map(obj => convertTransform(obj));
+    return { transform };
+}
+
+function convertWaitForAction(obj: Record<string, unknown>): syphonx.WaitForAction {
     const {query, ...waitfor} = obj;
     waitfor.$ = parseMultiQuery(query);
     return { waitfor };
@@ -117,7 +138,7 @@ function parseMultiQuery(obj: unknown): syphonx.SelectQuery[] {
             return [[obj]];
     }
     else {
-        throw new ErrorMessage("Invalid query expression");
+        throw new ErrorMessage(`Invalid query expression ${JSON.stringify(obj)}`);
     }
 }
 
@@ -129,7 +150,7 @@ function parseSingleQuery(obj: unknown): syphonx.SelectQuery {
             return [obj];
     }
     else {
-        throw new ErrorMessage("Invalid query expression");
+        throw new ErrorMessage(`Invalid query expression ${JSON.stringify(obj)}`);
     }
 }
 
