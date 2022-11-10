@@ -31,7 +31,7 @@ select:
 
 The `name` is extracted from an element with an id of `title`, and `price` is extracted from an element with a class of `a-offscreen` that is contained within an element with a class of `a-price` that is further contained within an element with an id of `buybox`.
 
-This template is parameter-driven so you can run the command again with a different ASIN product number...
+This template is parameter-driven so we can run the command again with a different ASIN product number...
 ```
 npx syphonx run $/examples/amazon/product-page.yaml --params="{asin:'B0787D6SGQ'}"
 ```

@@ -26,8 +26,7 @@ This should produce output similar to the following...
       "name": "Know Your Meme: Internet Meme Database",
       "excerpt": "Know Your Meme is a website dedicated to documenting Internet phenomena: viral videos, image macros, catchphrases, web celebs and more.",
       "href": "https://knowyourmeme.com/"
-    },
-    // ...
+    }
   ]
 }
 ```
@@ -57,11 +56,11 @@ select:
 
 Notice the `search_result` is a repeated object with a CSS selector that sets the context for multiple search results to be retrieved. Each search result is extracted with the `name` and `excerpt` properties retrieved using a CSS selector and the `href` property using a jQuery selector to grab the HTML attribute.
 
-This template is parameter-driven so you can run the command again with with a different search query...
+This template is parameter-driven so we can run the command again with with a different search query...
 ```
 npx syphonx run $/examples/google/search.yaml --params="{search:'restaurants'}"
 ```
 
-What if you wanted to extract the description that appears above the search results, or the *"People also ask"* section? [Continue](google-search-2.md)
+What if we also wanted to extract the description that appears above the search results, or the *"People also ask"* section? [Continue](google-search-2.md)
 
 [Back to top](/README.md)

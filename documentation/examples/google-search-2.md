@@ -42,7 +42,7 @@ select:
         query: $('[data-header-feature] a').attr('href')
 ```
 
-Run the template and you should see the new `description` in the output.
+Run the template and we should see the new `description` in the output.
 ```json
 {
   "description": "meme \\MEEM\\ noun. 1 : an idea, behavior, style, or usage that spreads from person to person within a culture . 2 : an amusing or interesting item (such as a captioned picture or video) or genre of items that is spread widely online especially through social media. 3 days ago",
@@ -51,12 +51,11 @@ Run the template and you should see the new `description` in the output.
       "name": "Meme Definition & Meaning - Merriam-Webster",
       "excerpt": "The meaning of MEME is an amusing or interesting item (such as a captioned picture or video) or genre of items that is spread widely online especially ...",
       "href": "https://www.merriam-webster.com/dictionary/meme"
-    },
-    ...
+    }
   ]
 }
 ```
 
-Want to see how to extract the *"People also ask"* section? [Continue](google-search-3.md)
+Next let's try extracting the *"People also ask"* section. [Continue](google-search-3.md)
 
 [Back to top](/README.md)

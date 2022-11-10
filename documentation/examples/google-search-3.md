@@ -49,11 +49,11 @@ select:
         query: $('[data-header-feature] a').attr('href')
 ```
 
-Run the template and you should see the new `people_also_ask` data in the output.
+Run the template and we should see the new `people_also_ask` data in the output.
 ```json
 {
   "description": "...",
-  "search_result": [...],
+  "search_result": [],
   "people_also_ask": [
     "What is an example of meme?",
     "What is considered as meme?",
