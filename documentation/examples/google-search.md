@@ -32,7 +32,7 @@ This should produce output similar to the following...
 ```
 
 The output should reflect the selected content on the page...
-![screenshot](images/google-search.png)
+<kbd><img src="images/google-search.png" /></kbd>
 
 > Of course Google has an API for this, but we're just learning here.
 
