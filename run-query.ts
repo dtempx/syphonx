@@ -98,11 +98,11 @@ export default async function (args: Record<string, string>): Promise<void> {
                 }
             });
             if (result.ok || args.onerror === "insert") {
-                const id = await insert({ dataset, table, key, tag, result });
-                succeeded += 1;
                 const t2 = new Date().valueOf();
                 const elapsed = t2 - t1;
-                console.log(`[${++i}/${rows.length}] ${url} inserted to ${dataset}.${table} key=${key} id=${id} t=${((elapsed) / 1000).toFixed(1)}s${!result.ok ? ` (${result.errors?.length} errors)` : ""}`);
+                const id = await insert({ dataset, table, url, key, tag, elapsed, result });
+                succeeded += 1;
+                console.log(`[${++i}/${rows.length}] ${url} inserted to ${dataset}.${table} key=${key} id=${id} elapsed=${((elapsed) / 1000).toFixed(1)}s${!result.ok ? ` (${result.errors?.length} errors)` : ""}`);
                 tmin = elapsed < tmin ? elapsed : tmin;
                 tmax = elapsed > tmax ? elapsed : tmax;
                 tavg = (tavg + elapsed) / 2;
@@ -110,7 +110,7 @@ export default async function (args: Record<string, string>): Promise<void> {
             else {
                 skipped += 1;
                 const t2 = new Date().valueOf();
-                console.log(`[${++i}/${rows.length}] ${url} t=${((t2 - t1) / 1000).toFixed(1)}s SKIPPED\nERROR ${result.errors?.map(error => JSON.stringify(error)).join("\n")}`);
+                console.log(`[${++i}/${rows.length}] ${url} elapsed=${((t2 - t1) / 1000).toFixed(1)}s SKIPPED\nERROR ${result.errors?.map(error => JSON.stringify(error)).join("\n")}`);
             }
 
             if (result.ok) {
@@ -142,9 +142,9 @@ export default async function (args: Record<string, string>): Promise<void> {
                     }],
                     ok: false
                 };
-                const id = await insert({ dataset, table, key, tag, result });
+                const id = await insert({ dataset, table, url, key, tag, result });
                 const t2 = new Date().valueOf();
-                console.log(`[${++i}/${rows.length}] ${id} inserted to ${dataset}.${table} key=${key} id=${id} t=${((t2 - t1) / 1000).toFixed(1)}s ok=false\nERROR ${err instanceof Error ? err.message : err}`);
+                console.log(`[${++i}/${rows.length}] ${id} inserted to ${dataset}.${table} key=${key} id=${id} elapsed=${((t2 - t1) / 1000).toFixed(1)}s ok=false\nERROR ${err instanceof Error ? err.message : err}`);
             }
             else {
                 console.error(`[${++i}/${rows.length}] ${url} ok=false\nERROR: ${err instanceof Error ? err.message : err}`);
@@ -160,7 +160,7 @@ export default async function (args: Record<string, string>): Promise<void> {
         console.error(`${maxConsecutiveErrors} consecutive errors exceeded`);
 
     const t3 = new Date().valueOf();
-    console.log(`${succeeded} inserted, ${failed} failed, ${skipped} skipped, ${retryCount} retries, ${tmin.toFixed(1)} min, ${tmax.toFixed(1)} max, ${tavg.toFixed(1)} avg, ${((t3 - t0) / 60000).toFixed(1)} min`);
+    console.log(`${succeeded} inserted, ${failed} failed, ${skipped} skipped, ${retryCount} retries, ${(tmin / 1000).toFixed(1)}s min, ${(tmax / 1000).toFixed(1)}s max, ${(tavg / 1000).toFixed(1)}s avg, ${Math.floor((t3 - t0) / 60000)} minutes total`);
 
     if (args.after && succeeded > 0) {
         const query = args.after.includes(" ") ? args.after : `CALL ${args.after}()`;

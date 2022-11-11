@@ -3,4 +3,6 @@
 * jQuery Reference
 * CLI
 * API
-* Embedding
+* Data
+* Core Embedding
+* [Roadmap](documentation/roadmap.md)

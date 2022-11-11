@@ -61,6 +61,8 @@ This template is parameter-driven so we can run the command again with with a di
 npx syphonx run $/examples/google/search.yaml --params="{search:'restaurants'}"
 ```
 
-What if we also wanted to extract the description that appears above the search results, or the *"People also ask"* section? [Continue](google-search-2.md)
+What if we also wanted to extract the description that appears above the search results, or the *"People also ask"* section?
 
-[Back to top](/README.md)
+[Continue >](google-search-2.md)
+
+[< Go back](index.md)

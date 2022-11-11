@@ -56,6 +56,8 @@ Run the template and we should see the new `description` in the output.
 }
 ```
 
-Next let's try extracting the *"People also ask"* section. [Continue](google-search-3.md)
+Next let's try extracting the *"People also ask"* section.
 
-[Back to top](/README.md)
+[Continue >](google-search-3.md)
+
+[< Go back](google-search.md)

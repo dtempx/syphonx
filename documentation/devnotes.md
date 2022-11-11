@@ -49,6 +49,14 @@ node command view $/examples/weather.yaml
 node command view $/examples/weather.yaml --json
 ```
 
+## Symbolic Linking
+1. Run `yarn link` from this project
+2. Run `yarn link syphonx` from other project
+3. Run `npx syphonx --version` to verify
+
+[More info](https://medium.com/@debshish.pal/publish-a-npm-package-locally-for-testing-9a00015eb9fd)
+
+
 
 ## Deploy
 ```

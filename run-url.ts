@@ -18,6 +18,7 @@ export default async function (args: Record<string, string>): Promise<void> {
     const dataset = template.key ? template.key.split("/").filter(text => text.length > 0)[0] : "";
     const table = "syphonx";
 
+    const t1 = new Date().valueOf();
     let result: Partial<syphonx.ExtractResult>;
     if (!args[2]) {
         const pause = args.pause === "1" ? "before" : (args.pause as "before" | "after" | "both" | undefined);
@@ -50,8 +51,10 @@ export default async function (args: Record<string, string>): Promise<void> {
 
     if (args.insert) {
         if (result.ok || args.onerror === "insert") {
-            const id = await insert({ dataset, table, key: template.key || "default", tag: args.tag, result });
-            console.log(`${id} inserted to ${dataset}.${table}`);
+            const t2 = new Date().valueOf();
+            const elapsed = t2 - t1;
+            const id = await insert({ dataset, table, url, key: template.key || "default", tag: args.tag, elapsed, result });
+            console.log(`${url} inserted to ${dataset}.${table} key=${template.key} id=${id} elapsed=${((elapsed) / 1000).toFixed(1)}s${!result.ok ? ` (${result.errors?.length} errors)` : ""}`);
         }
     }
     else {

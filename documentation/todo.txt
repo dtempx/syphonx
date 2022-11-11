@@ -67,3 +67,22 @@ Disallowed jQuery functions: appendTo, each, prependTo, insertBefore, insertAfte
 Regular expressions
 Formulas
 
+
+Document common table schema...
+CREATE OR REPLACE TABLE temp.syphonx
+(
+  timestamp TIMESTAMP NOT NULL,
+  key STRING NOT NULL,
+  id STRING NOT NULL,
+  domain STRING NOT NULL,
+  url STRING NOT NULL,
+  params STRING,
+  data STRING,
+  ok BOOLEAN,
+  online BOOLEAN,
+  elapsed INT64,
+  errors ARRAY<STRUCT<code STRING, message STRING>>,
+  tag STRING
+)
+PARTITION BY DATE(timestamp)
+CLUSTER BY key;
