@@ -35,9 +35,9 @@ The questions appearing under *"People also ask"* can be targeted with a `data-q
 
 Unfortunately, there are several challenges here. The content that contains the `data-q` nodes isn't as decorated with attributes that have nice semantic meaning as is typically the case. Also there is a `heading` node but it's fairly buried and doesn't share an immediate common ancestor with the `data-q` nodes.
 
-When there's nothing else to go on, a good strategy is to target the text that appears on the page, *"People also ask"* in this case, and then drill down to find the questions. But this requires some non-trivial DOM tree traversals.
+When there's nothing else to go on, a good strategy is to target the text that appears on the page, *"People also ask"* in this case, and then drill down to find the questions. But this requires some non-trivial DOM tree traversals. Another challenge can be that plain CSS selectors in other environments don't support targeting text content, only elements and attributes.
 
-The good news is this is exactly the kind of problem that [jQuery](https://en.wikipedia.org/wiki/JQuery) selectors were designed to handle. Here is a jQuery selector that successfully navigates the compexities described above.
+The good news is this is exactly the kind of problem that [jQuery](https://en.wikipedia.org/wiki/JQuery) selectors were designed to handle. Here is a jQuery selector that successfully navigates all the compexities discussed above.
 
 ```
 $('span:contains("People also ask")')
@@ -48,7 +48,6 @@ $('span:contains("People also ask")')
 
 This jQuery selector basically does the following.
 1. Find the node that contains the text `People also ask`.
-> Note: Plain CSS selectors don't support `:contains` so this is a big advantage afforded by jQuery.
 2. Traverse to the *closest* containing parent node with a `data-initq` attribute.
 3. Drill down to *find* all the child nodes with a `data-q` attribute.
 4. Select the contained node with a `role` attribute equal to `button`.
