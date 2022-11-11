@@ -61,4 +61,4 @@ Run the template and we should see the new `people_also_ask` data in the output.
 }
 ```
 
-[< Go back](google-search.md)
+[< Go back](index.md)
