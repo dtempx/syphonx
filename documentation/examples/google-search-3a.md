@@ -46,12 +46,11 @@ $('span:contains("People also ask")')
     .filter('/\\?$/')
 ```
 
-This jQuery selector basically does the following.
+jQuery selectors always start out with a `$('...')` and this one basically does the following.
 1. Find the node that contains the text `People also ask`.
 2. Traverse to the *closest* containing parent node with a `data-initq` attribute.
-3. Drill down to *find* all the child nodes with a `data-q` attribute.
-4. Select the contained node with a `role` attribute equal to `button`.
-5. Narrow the results using a *filter* to remove hits that don't end in a question mark to prevent other junk data that sometimes comes through.
-> That's a [Regular expression](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions) (or *regex* for short) inside the filter in case you're unfamiliar with how those work. The regex `/\\?$/` basically matches a question mark `?` at the end of a string. The question mark has to be escaped with a backslash because it otherwise has special meaning in a regex. The `$` designates the end of the string. Note the backslash itself has to be escaped within a string which is why there are two backslashes instead of one.
+3. Drill down to *find* all the child nodes with a `data-q` attribute and navigate to the contained node with a `role` attribute equal to `button`.
+4. Narrow the result using a *filter* to remove hits that don't end in a question mark to prevent other junk data that sometimes comes through.
+> That's a [Regular expression](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions) (or *regex* for short) inside the filter in case you're unfamiliar with how those work. The regex `/\\?$/` basically matches a question mark `?` at the end of a string. The question mark has to be escaped with a backslash because it otherwise has special meaning in a regex. The `$` designates the end of the string. Note the backslash itself has to be escaped within a string which is why there are two backslashes instead of one. Regex's can be a challenge for newcomers, but they're also incredibly powerful and they're used basically everywhere.
 
 [Go back](google-search-3.md)
