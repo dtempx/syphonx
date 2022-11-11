@@ -30,5 +30,6 @@ This template uses a ["CSS Selector"](https://www.w3schools.com/cssref/css_selec
 Of course the template can be modified and run locally. [Try it now!](documentation/examples/weather.md)
 
 # Want to know more?
+* [More Examples](documentation/examples/index.md)
+* [API Documentation](documentation/overview.md)
 * [FAQ](documentation/faq.md)
-* [SyphonX API Documentation](documentation/overview.md)

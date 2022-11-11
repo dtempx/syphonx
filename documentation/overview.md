@@ -5,4 +5,4 @@
 * API
 * Data
 * Core Embedding
-* [Roadmap](documentation/roadmap.md)
+* [Roadmap](roadmap.md)
