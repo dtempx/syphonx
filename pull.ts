@@ -1,7 +1,7 @@
 import * as fs from "async-file";
 import * as path from "path";
+import * as syphonx from "syphonx-lib";
 import { parseArgs } from "./lib/index.js";
-import { fetchTemplate } from "./lib/index.js";
 
 export default async function () {
     const args = parseArgs({
@@ -11,7 +11,7 @@ export default async function () {
         }
     });
     const file = path.resolve(path.basename(args[1]));
-    const text = await fetchTemplate(args[1]);
+    const text = await syphonx.fetchTemplateSource(args[1]);
     await fs.writeTextFile(file, text);
     console.log(file);
 }

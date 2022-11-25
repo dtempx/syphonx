@@ -1,10 +1,10 @@
-import * as syphonx from "syphonx-core";
+import * as syphonx from "syphonx-lib";
 import * as fs from "fs";
 import JSON5 from "json5";
-import { insert, offline, online, loadTemplate, subset, Template } from "./lib/index.js";
+import { insert, loadTemplate, offline, online, subset } from "./lib/index.js";
 
 export default async function (args: Record<string, string>): Promise<void> {
-    const template: Template = args[1] ? await loadTemplate(args[1]) : { actions: [] };
+    const template: syphonx.Template = args[1] ? await loadTemplate(args[1]) : { actions: [] };
     const url = args.url || template.url;
     if (!url && !args[2]) {
         console.log("url not specified");
@@ -32,7 +32,6 @@ export default async function (args: Record<string, string>): Promise<void> {
             debug,
             timeout: parseInt(args.timeout) || template.timeout,
             offline: !!args.offline,
-            browserOptions: {}, // todo: not supported yet
             includeDOMRefs: false,
             outputTransformedHTML: output.includes("html:post")
         });

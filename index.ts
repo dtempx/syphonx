@@ -1,3 +1,2 @@
-export { online, offline, loadTemplate, Template } from "./lib/index.js";
-export * from "syphonx-core";
-
+export { online, offline } from "./lib/index.js";
+export * from "syphonx-lib";

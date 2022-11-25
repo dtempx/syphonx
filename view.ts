@@ -1,5 +1,5 @@
+import * as syphonx from "syphonx-lib";
 import { parseArgs } from "./lib/index.js";
-import { fetchTemplate, loadTemplate } from "./lib/index.js";
 
 export default async function () {
     const args = parseArgs({
@@ -13,11 +13,11 @@ export default async function () {
     });
 
     if (args.json) {
-        const template = await loadTemplate(args[1]);
+        const template = await syphonx.fetchTemplate(args[1]);
         console.log(JSON.stringify(template, null, 2));    
     }
     else {
-        const text = await fetchTemplate(args[1]);
+        const text = await syphonx.fetchTemplateSource(args[1]);
         console.log(text.trim());
     }
 }

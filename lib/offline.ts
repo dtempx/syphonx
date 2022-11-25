@@ -1,5 +1,5 @@
 import * as cheerio from "cheerio";
-import * as syphonx from "syphonx-core";
+import * as syphonx from "syphonx-lib";
 import { omit, removeDOMRefs } from "./utilities.js";
 
 export interface OfflineOptions {

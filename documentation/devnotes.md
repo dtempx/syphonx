@@ -60,7 +60,7 @@ node command view $/examples/weather.yaml --json
 
 ## Deploy
 ```
-yarn upgrade syphonx-core --latest
+yarn upgrade syphonx-lib --latest
 yarn upgrade puppeteer --latest
 yarn build
 yarn test

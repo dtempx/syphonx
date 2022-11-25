@@ -42,6 +42,7 @@ How can I contribute examples to benefit others?
 How output merging works
 
 Can I use SyphonX to process offline HTML content?
+Can SyphonX handle logins?
 
 Integrating with a database
 

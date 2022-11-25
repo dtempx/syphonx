@@ -1,7 +1,7 @@
 import puppeteer from "puppeteer";
 import * as fs from "fs";
 import * as cheerio from "cheerio";
-import * as syphonx from "syphonx-core";
+import * as syphonx from "syphonx-lib";
 import * as path from "path";
 import { fileURLToPath } from "url";
 import { default as prompt } from "./prompt.js";
@@ -11,16 +11,25 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const __jquery = fs.readFileSync(path.resolve(__dirname, "../jquery.slim.min.js"), "utf8");
 
-const defaultBrowserOptions = {
-    useragent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36",
+const defaults = {
+    useragent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36",
     headers: { "Accept-Language": "en-US,en" },
     viewport: { width: 1366, height: 768 }
 };
 
-export interface BrowserOptions {
-    useragent?: string;
-    headers?: Record<string, string>;
-    viewport?: { width: number, height: number };
+function asPuppeteerLifeCycleEvent(state: syphonx.DocumentLoadState | syphonx.DocumentLoadState[] | undefined): puppeteer.PuppeteerLifeCycleEvent | puppeteer.PuppeteerLifeCycleEvent[] | undefined {
+    if (state instanceof Array)
+        return state.map(value => asPuppeteerLifeCycleEvent(value) as puppeteer.PuppeteerLifeCycleEvent);
+    else if (state === "load")
+        return "load";
+    else if (state === "domcontentloaded")
+        return "domcontentloaded";
+    else if (state === "networkidle")
+        return "networkidle2";
+    else if (state === "none")
+        return undefined;
+    else
+        return "load";
 }
 
 export interface RetryParams {
@@ -37,9 +46,12 @@ export interface OnlineOptions {
     show?: boolean;
     pause?: "before" | "after" | "both";
     debug?: boolean;
-    timeout?: number;
+    timeout?: number; // seconds
     offline?: boolean;
-    browserOptions?: BrowserOptions;
+    useragent?: string;
+    headers?: Record<string, string>;
+    viewport?: { width: number, height: number };
+    waitUntil?: syphonx.DocumentLoadState | syphonx.DocumentLoadState[] | undefined;
     includeDOMRefs?: boolean;
     outputTransformedHTML?: boolean;
     retries?: number;
@@ -53,7 +65,7 @@ export async function online({ retries = 0, onRetry, ...options}: OnlineOptions)
         result = await tryOnline(options);
         if (result.ok)
             break;
-        if (retry >= retries || !result.errors?.some(error => ["select-timeout", "external-error", "waitfor-timeout"].includes(error.code)))
+        if (retry >= retries || result.errors?.some(error => error.level <= 0))
             break;
         if (onRetry)
             await onRetry({ retry: ++retry, retries, result });
@@ -63,7 +75,7 @@ export async function online({ retries = 0, onRetry, ...options}: OnlineOptions)
     return result;
 }
 
-async function tryOnline({ show = false, pause, includeDOMRefs = false, outputTransformedHTML = false, browserOptions, offline, timeout, ...options }: OnlineOptions): Promise<Partial<syphonx.ExtractResult>> {
+async function tryOnline({ show = false, pause, includeDOMRefs = false, outputTransformedHTML = false, ...options }: OnlineOptions): Promise<Partial<syphonx.ExtractResult>> {
     if (!options.url || typeof options.url !== "string")
         throw new ErrorMessage("url not specified");
     if (!options.vars)
@@ -83,10 +95,9 @@ async function tryOnline({ show = false, pause, includeDOMRefs = false, outputTr
         });
 
         page = await browser.newPage();
-        const { useragent, headers, viewport } = { ...defaultBrowserOptions, ...browserOptions };
-        await page.setUserAgent(useragent);
-        await page.setExtraHTTPHeaders(headers);
-        await page.setViewport(viewport);
+        await page.setUserAgent(options.useragent || defaults.useragent);
+        await page.setExtraHTTPHeaders({ ...defaults.headers, ...options.headers });
+        await page.setViewport(options.viewport || defaults.viewport);
 
         let status = 0;
         await page.on("response", response => {
@@ -95,14 +106,16 @@ async function tryOnline({ show = false, pause, includeDOMRefs = false, outputTr
             }
         });
 
-        await page.goto(originalUrl, { waitUntil: "load", timeout });
-        options.vars.__http_status = status;
+        const timeout = typeof options.timeout === "number" ? options.timeout * 1000 : undefined;
+        const waitUntil = asPuppeteerLifeCycleEvent(options.waitUntil);
+        await page.goto(originalUrl, { timeout, waitUntil });
+        options.vars.__status = status;
         await page.evaluate(__jquery);
 
         if (["before", "both"].includes(pause!) && show)
             await prompt("paused, hit enter to continue...");
     
-        if (offline) {
+        if (options.offline) {
             const html = await page.evaluate(() => document.querySelector("*")!.outerHTML);
             const root = cheerio.load(html);
             const result = await syphonx.extract({ ...options, root, url: originalUrl } as syphonx.ExtractState);
@@ -111,7 +124,7 @@ async function tryOnline({ show = false, pause, includeDOMRefs = false, outputTr
                 ok: result.errors.length === 0,
                 status: 0,
                 online: false,
-                //originalUrl,
+                originalUrl,
                 html: root.html(),
                 data: includeDOMRefs ? result.data : removeDOMRefs(result.data)
             };
@@ -123,9 +136,15 @@ async function tryOnline({ show = false, pause, includeDOMRefs = false, outputTr
 
         let { url, domain, origin, ...state } = await page.evaluate(syphonx.extract, options as any);
         while (state.yield) {
-            await page.waitForNavigation({ waitUntil: "load", timeout: state.yield.timeout });
+            await page.waitForNavigation({
+                timeout: state.yield.timeout ? state.yield.timeout : timeout,
+                waitUntil: state.yield.waitUntil ? asPuppeteerLifeCycleEvent(state.yield.waitUntil) : waitUntil
+            });
+            await page.evaluate(__jquery);
             state.yield === undefined;
-            state.vars.__http_status = status;
+            state.vars.__status = status;
+            if (["before", "both"].includes(pause!) && show)
+                await prompt(`paused at step #${state.yield?.step}, hit enter to continue...`);
             state = await page.evaluate(syphonx.extract, state as any);
         }
 
@@ -142,7 +161,7 @@ async function tryOnline({ show = false, pause, includeDOMRefs = false, outputTr
             url,
             domain,
             origin,
-            //originalUrl,
+            originalUrl,
             html,
             online: true,
             data: includeDOMRefs ? state.data : removeDOMRefs(state.data)
@@ -156,8 +175,9 @@ async function tryOnline({ show = false, pause, includeDOMRefs = false, outputTr
             domain,
             origin,
             errors: [{
-                code: "external-error" as any,
-                message: err instanceof Error ? err.message : JSON.stringify(err)
+                code: "external-error",
+                message: err instanceof Error ? err.message : JSON.stringify(err),
+                level: 0
             }],
             online: true
         };

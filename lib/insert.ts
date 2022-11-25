@@ -1,5 +1,5 @@
 import { BigQuery } from "@google-cloud/bigquery";
-import { ExtractResult } from "syphonx-core";
+import { ExtractResult } from "syphonx-lib";
 import { uid } from "./uid.js";
 import { parseUrl } from "./utilities.js";
 
