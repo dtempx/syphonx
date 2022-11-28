@@ -177,7 +177,7 @@ async function tryOnline({ show = false, pause, includeDOMRefs = false, outputTr
             errors: [{
                 code: "external-error",
                 message: err instanceof Error ? err.message : JSON.stringify(err),
-                level: 0
+                level: 1
             }],
             online: true
         };

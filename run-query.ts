@@ -55,6 +55,9 @@ export default async function (args: Record<string, string>): Promise<void> {
 
     const maxErrors = args.maxErrors ? parseInt(args.maxErrors) : Infinity;
     const maxConsecutiveErrors = args.maxConsecutiveErrors ? parseInt(args.maxConsecutiveErrors) : Infinity;
+    
+    const skip = args.skip ? parseInt(args.skip) : 0;
+    const limit = args.limit ? parseInt(args.limit) : Infinity;
 
     let i = 0;
     let succeeded = 0;
@@ -70,6 +73,10 @@ export default async function (args: Record<string, string>): Promise<void> {
     const t0 = new Date().valueOf();
     try {
         await async.each(rows, async row => {
+            if (i < (skip - 1) || i >= limit) {
+                i += 1;
+                return;
+            }                
             if (errors >= maxErrors)
                 return;
             if (consecutiveErrors >= maxConsecutiveErrors)
