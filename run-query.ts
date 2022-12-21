@@ -92,6 +92,7 @@ export default async function (args: Record<string, string>): Promise<void> {
                     url,
                     params: { ...template.params, ...params, ...(args.params ? JSON5.parse(args.params) : undefined) },
                     pause: args.pause === "1" ? "before" : (args.pause as "before" | "after" | "both" | undefined),
+                    includeDOMRefs: !!args.metadata,
                     show: !!args.show,
                     timeout: parseInt(args.timeout) || template.timeout,
                     offline: !!args.offline,

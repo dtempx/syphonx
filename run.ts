@@ -27,6 +27,7 @@ export default async function () {
             limit: "limit number of rows returned in query mode to process (default=Infinity)",
             timeout: "navigation timeout in milliseconds (default=30000)",
             tag: "tags inserted data",
+            metadata: "include metadata in output data",
             out: "determines output (data, html, log), specify html:post for post transformed HTML",
             insert: "specifies to insert to configured data target (ignored in query mode)"
         },

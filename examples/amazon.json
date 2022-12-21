@@ -5,15 +5,15 @@
             "select": [
                 {
                     "name": "name",
-                    "$": [["#title"]]
+                    "query": [["#title"]]
                 },
                 {
                     "name": "price",
-                    "$": [["#buybox .a-price .a-offscreen"]]
+                    "query": [["#buybox .a-price .a-offscreen"]]
                 },
                 {
                     "name": "availability",
-                    "$": [["#availability"]]
+                    "query": [["#availability"]]
                 }
             ]
         }

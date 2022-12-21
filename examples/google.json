@@ -6,19 +6,19 @@
                 {
                     "name": "search_result",
                     "repeated": true,
-                    "$": [["#search .g:visible"]],
+                    "query": [["#search .g:visible"]],
                     "select": [
                         {
                             "name": "name",
-                            "$": [["[data-header-feature] a h3"]]
+                            "query": [["[data-header-feature] a h3"]]
                         },
                         {
                             "name": "excerpt",
-                            "$": [["[data-content-feature]:has(span)"]]
+                            "query": [["[data-content-feature]:has(span)"]]
                         },
                         {
                             "name": "href",
-                            "$": [["[data-header-feature] a",["attr","href"]]]
+                            "query": [["[data-header-feature] a",["attr","href"]]]
                         }
                     ]
                 }

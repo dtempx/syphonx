@@ -32,7 +32,7 @@ export default async function (args: Record<string, string>): Promise<void> {
             debug,
             timeout: parseInt(args.timeout) || template.timeout,
             offline: !!args.offline,
-            includeDOMRefs: false,
+            includeDOMRefs: !!args.metadata,
             outputTransformedHTML: output.includes("html:post")
         });
     }
@@ -44,7 +44,7 @@ export default async function (args: Record<string, string>): Promise<void> {
             url,
             params,
             debug,
-            includeDOMRefs: false
+            includeDOMRefs: !!args.metadata
         });
     }
 

@@ -20,6 +20,7 @@ node command run test.json --out=html
 node command run test.json --out=html:post
 node command run test.json --out=log
 node command run test.json --out=data,log
+node command run test.json --metadata
 node command run test.json test.html
 node command run test.json test.html --out=data,log
 node command run test.json --offline

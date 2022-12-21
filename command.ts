@@ -29,6 +29,8 @@ if (process.argv.length < 3 || command === "--help") {
     process.exit();
 }
 
+process.removeAllListeners("warning"); // WORKAROUND remove message "(node:12517) ExperimentalWarning: The Fetch API is an experimental feature. This feature could change at any time"
+
 (async () => {
     try {
         if (command === "run") {
