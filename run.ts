@@ -29,7 +29,8 @@ export default async function () {
             tag: "tags inserted data",
             metadata: "include metadata in output data",
             out: "determines output (data, html, log), specify html:post for post transformed HTML",
-            insert: "specifies to insert to configured data target (ignored in query mode)"
+            insert: "specifies to insert to configured data target (ignored in query mode)",
+            proxy: "specifies proxy url to use"
         },
         validate: args => {
             if (!args[1] && !args.query && !args.version)

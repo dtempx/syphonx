@@ -29,7 +29,7 @@ export default async function (args: Record<string, string>): Promise<void> {
     const root = "./scripts"; //TODO: set root directory context based on config
     const templates: Record<string, syphonx.Template> = {};
     for (const key of Array.from(new Set(rows.map(row => row.key)))) {
-        const file = path.resolve(`${root}${key}.json`);
+        const file = !key.startsWith("$") ? path.resolve(`${root}${key}.json`) : key;
         try {
             templates[key] = await loadTemplate(file);
             console.log(`TEMPLATE LOADED: ${file}`);
@@ -94,6 +94,7 @@ export default async function (args: Record<string, string>): Promise<void> {
                     pause: args.pause === "1" ? "before" : (args.pause as "before" | "after" | "both" | undefined),
                     includeDOMRefs: !!args.metadata,
                     show: !!args.show,
+                    proxy: args.proxy,
                     timeout: parseInt(args.timeout) || template.timeout,
                     offline: !!args.offline,
                     retries: parseInt(args.retries) || 0,
@@ -139,7 +140,7 @@ export default async function (args: Record<string, string>): Promise<void> {
                 }
             }
             catch (err) {
-                console.log("ERROR", err);
+                console.log("ERROR", JSON.stringify(err, null, 2));
                 if (args.onerror === "insert") {
                     const { domain, origin } = parseUrl(url);
                     const result = {
@@ -148,14 +149,14 @@ export default async function (args: Record<string, string>): Promise<void> {
                         origin,
                         errors: [{
                             code: "external-error" as any,
-                            message: err instanceof Error ? err.message : JSON.stringify(err),
+                            message: err instanceof Error && err.message ? err.message : JSON.stringify(err),
                             level: 0
                         }],
                         ok: false
                     };
                     const id = await insert({ dataset, table, url, key, tag, result });
                     const t2 = new Date().valueOf();
-                    console.log(`[${++i}/${rows.length}] ${url} inserted to ${dataset}.${table} key=${key} id=${id} elapsed=${((t2 - t1) / 1000).toFixed(1)}s failed\nERROR ${err instanceof Error ? err.message : JSON.stringify(err)}`);
+                    console.log(`[${++i}/${rows.length}] ${url} inserted to ${dataset}.${table} key=${key} id=${id} elapsed=${((t2 - t1) / 1000).toFixed(1)}s failed\nERROR ${err instanceof Error && err.message ? err.message : JSON.stringify(err)}`);
                 }
                 else {
                     console.error(`[${++i}/${rows.length}] ${url} failed\nERROR ${err instanceof Error ? err.message : JSON.stringify(err)}`);

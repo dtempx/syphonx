@@ -48,6 +48,7 @@ export interface OnlineOptions {
     debug?: boolean;
     timeout?: number; // seconds
     offline?: boolean;
+    proxy?: string;
     useragent?: string;
     headers?: Record<string, string>;
     viewport?: { width: number, height: number };
@@ -84,16 +85,17 @@ async function tryOnline({ show = false, pause, includeDOMRefs = false, outputTr
     const originalUrl = evaluateFormula(`\`${options.url}\``, options.params) as string;
     let browser: Browser | undefined = undefined;
     let page: Page | undefined = undefined;
-    try {
-        browser = await puppeteer.launch({
-            headless: !show,
-            args: [
-                "--no-sandbox", // required to run within some containers
-                "--disable-web-security", // enable accessing cross-domain iframe's
-                "--disable-dev-shm-usage", // workaround for "Target closed" errors when capturing screenshots https://github.com/GoogleChrome/puppeteer/issues/1790
-            ],
-        });
+    const headless = !show;
+    const args = [
+        "--no-sandbox", // required to run within some containers
+        "--disable-web-security", // enable accessing cross-domain iframe's
+        "--disable-dev-shm-usage", // workaround for "Target closed" errors when capturing screenshots https://github.com/GoogleChrome/puppeteer/issues/1790
+    ];
+    if (options.proxy)
+        args.push(`--proxy-server=${options.proxy}`);
 
+    try {
+        browser = await puppeteer.launch({ headless, args });
         page = await browser.newPage();
         await page.setUserAgent(options.useragent || defaults.useragent);
         await page.setExtraHTTPHeaders({ ...defaults.headers, ...options.headers });
@@ -168,17 +170,24 @@ async function tryOnline({ show = false, pause, includeDOMRefs = false, outputTr
         };    
     }
     catch (err) {
+        let code: syphonx.ExtractErrorCode = "external-error";
+        let message = err instanceof Error ? err.message : JSON.stringify(err);
+        let level = 0;
+
+        if (message === "Protocol error (Runtime.callFunctionOn): Execution context was destroyed.") {
+            level = 1;
+        }
+        else if (message.startsWith("net::ERR_NO_SUPPORTED_PROXIES")) {
+            message = "Unsupported proxy URL. Passing username and password in proxy URL is not supported.";
+        }
+
         const { domain, origin } = parseUrl(originalUrl);
         return {
             ok: false,
             url: originalUrl,
             domain,
             origin,
-            errors: [{
-                code: "external-error",
-                message: err instanceof Error ? err.message : JSON.stringify(err),
-                level: 1
-            }],
+            errors: [{ code, message, level }],
             online: true
         };
     }

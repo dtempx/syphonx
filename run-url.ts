@@ -30,6 +30,7 @@ export default async function (args: Record<string, string>): Promise<void> {
             show,
             pause,
             debug,
+            proxy: args.proxy,
             timeout: parseInt(args.timeout) || template.timeout,
             offline: !!args.offline,
             includeDOMRefs: !!args.metadata,

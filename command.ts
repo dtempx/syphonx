@@ -48,7 +48,7 @@ process.removeAllListeners("warning"); // WORKAROUND remove message "(node:12517
         }
         process.exit();
     } catch (err) {
-        console.error(err instanceof Error ? err.message : err);
+        console.error(err instanceof Error ? err.message : JSON.stringify(err));
         process.exit(1);
     }
 })();
