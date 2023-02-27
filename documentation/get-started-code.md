@@ -23,6 +23,6 @@ import * as syphonx from "syphonx";
 ```
 
 # Want to know more?
-* [FAQ](documentation/faq.md)
+* [FAQ](faq.md)
 
 [Go back](../README.md)

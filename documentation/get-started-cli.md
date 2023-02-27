@@ -25,10 +25,10 @@ select: "[data-testid='CurrentConditionsContainer']"
 
 This template uses a ["CSS Selector"](https://www.w3schools.com/cssref/css_selectors.php) to query the DOM for an element with a `data-testid` attribute equal to `CurrentConditionsContainer` and returns the result.
 
-Of course the template can be modified and run locally. [Try it now!](documentation/examples/weather.md)
+Of course the template can be modified and run locally. [Try it now!](examples/weather.md)
 
 # Want to know more?
-* [More Examples](documentation/examples/index.md)
-* [FAQ](documentation/faq.md)
+* [More Examples](examples/index.md)
+* [FAQ](faq.md)
 
 [Go back](../README.md)
