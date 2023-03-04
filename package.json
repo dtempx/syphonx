@@ -1,13 +1,23 @@
 {
   "name": "syphonx",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "SyphonX is the easiest way to extract data from any website without coding",
   "author": "Dave Templin <dtempx@gmail.com> (https://github.com/dtempx/)",
   "homepage": "https://github.com/dtempx/syphonx",
   "repository": "github:dtempx/syphonx",
   "license": "MIT",
-  "main": "index.js",
   "type": "module",
+  "main": "./dist/commonjs/index.js",
+  "exports": {
+    ".": {
+        "types": "./dist/esm/index.d.ts",
+        "import": "./dist/esm/index.js",
+        "require": "./dist/commonjs/index.js"
+    }
+  },
+  "files": [
+    "./dist/"
+  ],
   "scripts": {
     "build": "npx tsc"
   },
@@ -44,10 +54,6 @@
     "web crawling",
     "web scraper",
     "web scraping"
-  ],
-  "files": [
-    "**/*.js",
-    "**/*.d.ts"
   ],
   "dependencies": {
     "@google-cloud/bigquery": "^6.0.3",
