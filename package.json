@@ -1,31 +1,30 @@
 {
   "name": "syphonx",
-  "version": "1.2.3",
+  "version": "1.2.5",
   "description": "SyphonX is the easiest way to extract data from any website without coding",
   "author": "Dave Templin <dtempx@gmail.com> (https://github.com/dtempx/)",
   "homepage": "https://github.com/dtempx/syphonx",
   "repository": "github:dtempx/syphonx",
   "license": "MIT",
   "type": "module",
-  "main": "./dist/commonjs/index.js",
+  "main": "./dist/cjs/index.js",
   "exports": {
     ".": {
-        "types": "./dist/esm/index.d.ts",
-        "import": "./dist/esm/index.js",
-        "require": "./dist/commonjs/index.js"
+      "types": "./dist/esm/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
     }
+  },
+  "bin": {
+    "syphonx": "./dist/esm/command.js"
   },
   "files": [
     "./dist/"
   ],
   "scripts": {
-    "build": "npx tsc"
-  },
-  "bin": {
-    "syphonx": "./command.js"
-  },
-  "engines": {
-    "node": ">=18.0.0"
+    "build": "bash ./build.sh",
+    "clean": "bash ./clean.sh",
+    "test": "npx mocha"
   },
   "keywords": [
     "automation",
@@ -69,7 +68,8 @@
     "json5": "^2.2.1",
     "nanoid": "^4.0.0",
     "parse-full-name": "^1.2.6",
-    "puppeteer": "^19.4.1",
+    "playwright": "^1.31.2",
+    "syphonx-lib": "^1.2.5",
     "typescript": "^4.8.3",
     "word-wrap": "^1.2.3"
   }

@@ -1,4 +1,4 @@
-import puppeteer, { Browser, Page, PuppeteerLifeCycleEvent } from "puppeteer";
+import playwright, { Browser, BrowserContext, Page } from "playwright";
 import * as fs from "fs";
 import * as cheerio from "cheerio";
 import * as syphonx from "syphonx-lib";
@@ -7,30 +7,15 @@ import { fileURLToPath } from "url";
 import { default as prompt } from "./prompt.js";
 import { evaluateFormula, omit, parseUrl, removeDOMRefs, sleep, ErrorMessage } from "./utilities.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const __jquery = fs.readFileSync(path.resolve(__dirname, "../jquery.slim.min.js"), "utf8");
+// @ts-ignore error TS1343: The 'import.meta' meta-property is only allowed when the '--module' option is 'es2020', 'es2022', 'esnext', 'system', 'node16', or 'nodenext'.
+//const __jquery = fs.readFileSync(path.resolve(typeof __dirname === undefined ? fileURLToPath(new URL(".", import.meta.url)) : __dirname, "../jquery.slim.min.js"), "utf8");
+const __jquery = fs.readFileSync(path.resolve(fileURLToPath(new URL(".", import.meta.url)), "../dist/jquery.slim.min.js"), "utf8");
 
 const defaults = {
-    useragent: "Mozilla/5.0 (X11; CrOS x86_64 15183.69.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36",
+    useragent: "Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
     headers: { "Accept-Language": "en-US,en" },
     viewport: { width: 1366, height: 768 }
 };
-
-function asPuppeteerLifeCycleEvent(state: syphonx.DocumentLoadState | syphonx.DocumentLoadState[] | undefined): PuppeteerLifeCycleEvent | PuppeteerLifeCycleEvent[] | undefined {
-    if (state instanceof Array)
-        return state.map(value => asPuppeteerLifeCycleEvent(value) as PuppeteerLifeCycleEvent);
-    else if (state === "load")
-        return "load";
-    else if (state === "domcontentloaded")
-        return "domcontentloaded";
-    else if (state === "networkidle")
-        return "networkidle2";
-    else if (state === "none")
-        return undefined;
-    else
-        return "load";
-}
 
 export interface RetryParams {
     retry: number;
@@ -52,7 +37,7 @@ export interface OnlineOptions {
     useragent?: string;
     headers?: Record<string, string>;
     viewport?: { width: number, height: number };
-    waitUntil?: syphonx.DocumentLoadState | syphonx.DocumentLoadState[] | undefined;
+    waitUntil?: syphonx.DocumentLoadState;
     includeDOMRefs?: boolean;
     outputTransformedHTML?: boolean;
     retries?: number;
@@ -84,6 +69,7 @@ async function tryOnline({ show = false, pause, includeDOMRefs = false, outputTr
 
     const originalUrl = evaluateFormula(`\`${options.url}\``, options.params) as string;
     let browser: Browser | undefined = undefined;
+    let context: BrowserContext | undefined = undefined;
     let page: Page | undefined = undefined;
     const headless = !show;
     const args = [
@@ -95,11 +81,11 @@ async function tryOnline({ show = false, pause, includeDOMRefs = false, outputTr
         args.push(`--proxy-server=${options.proxy}`);
 
     try {
-        browser = await puppeteer.launch({ headless, args });
-        page = await browser.newPage();
-        await page.setUserAgent(options.useragent || defaults.useragent);
+        browser = await playwright.chromium.launch({ headless, args });
+        context = await browser.newContext({ userAgent: options.useragent || defaults.useragent });
+        page = await context.newPage();
         await page.setExtraHTTPHeaders({ ...defaults.headers, ...options.headers });
-        await page.setViewport(options.viewport || defaults.viewport);
+        await page.setViewportSize(options.viewport || defaults.viewport);
 
         let status = 0;
         await page.on("response", response => {
@@ -109,8 +95,11 @@ async function tryOnline({ show = false, pause, includeDOMRefs = false, outputTr
         });
 
         const timeout = typeof options.timeout === "number" ? options.timeout * 1000 : undefined;
-        const waitUntil = asPuppeteerLifeCycleEvent(options.waitUntil);
+        const waitUntil = options.waitUntil;
         await page.goto(originalUrl, { timeout, waitUntil });
+        if (waitUntil)
+            await page.waitForURL(originalUrl, { timeout, waitUntil });
+
         options.vars.__status = status;
         await page.evaluate(__jquery);
 
@@ -138,10 +127,8 @@ async function tryOnline({ show = false, pause, includeDOMRefs = false, outputTr
 
         let { url, domain, origin, ...state } = await page.evaluate(syphonx.extract, options as any);
         while (state.yield) {
-            await page.waitForNavigation({
-                timeout: state.yield.timeout ? state.yield.timeout : timeout,
-                waitUntil: state.yield.waitUntil ? asPuppeteerLifeCycleEvent(state.yield.waitUntil) : waitUntil
-            });
+            if (state.yield.params?.waitUntil)
+                await page.waitForLoadState(state.yield.params.waitUntil, { timeout: state.yield.timeout || timeout });
             await page.evaluate(__jquery);
             state.yield === undefined;
             state.vars.__status = status;
