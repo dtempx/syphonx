@@ -67,7 +67,7 @@ async function tryOnline({ show = false, pause, includeDOMRefs = false, outputTr
     if (!options.vars)
         options.vars = {};
 
-    const originalUrl = evaluateFormula(`\`${options.url}\``, options.params) as string;
+    const originalUrl = encodeURI(evaluateFormula(`\`${options.url}\``, { params: options.params }) as string);
     let browser: Browser | undefined = undefined;
     let context: BrowserContext | undefined = undefined;
     let page: Page | undefined = undefined;
@@ -125,7 +125,7 @@ async function tryOnline({ show = false, pause, includeDOMRefs = false, outputTr
         if (!outputTransformedHTML)
             html = await page.evaluate(() => document.querySelector("*")!.outerHTML);
 
-        let { url, domain, origin, ...state } = await page.evaluate(syphonx.extract, options as any);
+        let { url, domain, origin, ...state } = await page.evaluate(syphonx.extract, { ...options as any, originalUrl });
         while (state.yield) {
             if (state.yield.params?.waitUntil)
                 await page.waitForLoadState(state.yield.params.waitUntil, { timeout: state.yield.timeout || timeout });
@@ -134,7 +134,7 @@ async function tryOnline({ show = false, pause, includeDOMRefs = false, outputTr
             state.vars.__status = status;
             if (["before", "both"].includes(pause!) && show)
                 await prompt(`paused at step #${state.yield?.step}, hit enter to continue...`);
-            state = await page.evaluate(syphonx.extract, state as any);
+            state = await page.evaluate(syphonx.extract, { ...state as any, originalUrl });
         }
 
         if (outputTransformedHTML)
