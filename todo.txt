@@ -1,3 +1,5 @@
+config options (like https://typedoc.org/options/configuration/)
+
 report number of retries attempted in log summary
 retry if blocked
 

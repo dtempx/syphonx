@@ -17,6 +17,7 @@
 * browse.ai
 * mrscraper.com
 * datagrab.io
+* [kadoa.com - Generate Web Scrapers With GPT](https://www.kadoa.com/)
 
 # Projects
 * [osmosis](https://www.npmjs.com/package/osmosis)
