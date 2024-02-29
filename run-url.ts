@@ -4,6 +4,7 @@ import JSON5 from "json5";
 import { insert, loadTemplate, offline, online, subset } from "./lib/index.js";
 
 export default async function (args: Record<string, string>): Promise<void> {
+    //todo: refactor to use api to load the template
     const template: syphonx.Template = args[1] ? await loadTemplate(args[1]) : { actions: [] };
     const url = args.url || template.url;
     if (!url && !args[2]) {
@@ -15,7 +16,7 @@ export default async function (args: Record<string, string>): Promise<void> {
     const debug = output.includes("log");
     const params = { ...template.params, ...(args.params ? JSON5.parse(args.params) : undefined) };
 
-    const dataset = template.key ? template.key.split("/").filter(text => text.length > 0)[0] : "";
+    const dataset = (template as any).key ? (template as any).key.split("/").filter((text: string) => text.length > 0)[0] : ""; //todo: remove key from template
     const table = "syphonx";
 
     const t1 = new Date().valueOf();
@@ -53,8 +54,9 @@ export default async function (args: Record<string, string>): Promise<void> {
         if (result.ok || args.onerror === "insert") {
             const t2 = new Date().valueOf();
             const elapsed = t2 - t1;
-            const id = await insert({ dataset, table, url, key: template.key || "default", tag: args.tag, elapsed, result });
-            console.log(`${url} inserted to ${dataset}.${table} key=${template.key} id=${id} elapsed=${((elapsed) / 1000).toFixed(1)}s${!result.ok ? ` (${result.errors?.length} errors)` : ""}`);
+            //todo: url has a "view-source:" prefix here for akerman/people
+            const id = await insert({ dataset, table, url, key: (template as any).key || "default", tag: args.tag, elapsed, result }); // todo: remove key from template
+            console.log(`${url} inserted to ${dataset}.${table} key=${(template as any).key} id=${id} elapsed=${((elapsed) / 1000).toFixed(1)}s${!result.ok ? ` (${result.errors?.length} errors)` : ""}`);
         }
     }
     else {

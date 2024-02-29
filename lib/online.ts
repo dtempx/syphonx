@@ -1,18 +1,27 @@
 import playwright, { Browser, BrowserContext, Page } from "playwright";
-import * as fs from "fs";
-import * as cheerio from "cheerio";
 import * as syphonx from "syphonx-lib";
-import * as path from "path";
-import { fileURLToPath } from "url";
 import { default as prompt } from "./prompt.js";
-import { evaluateFormula, omit, parseUrl, removeDOMRefs, sleep, ErrorMessage } from "./utilities.js";
 
-// @ts-ignore error TS1343: The 'import.meta' meta-property is only allowed when the '--module' option is 'es2020', 'es2022', 'esnext', 'system', 'node16', or 'nodenext'.
-//const __jquery = fs.readFileSync(path.resolve(typeof __dirname === undefined ? fileURLToPath(new URL(".", import.meta.url)) : __dirname, "../jquery.slim.min.js"), "utf8");
-const __jquery = fs.readFileSync(path.resolve(fileURLToPath(new URL(".", import.meta.url)), "../dist/jquery.slim.min.js"), "utf8");
+import {
+    evaluateFormula,
+    omit,
+    parseUrl,
+    sleep,
+    ErrorMessage
+}
+from "./utilities.js";
+
+import {
+    invokeAsyncMethod,
+    ExtractState,
+    SyphonXApi
+}
+from "syphonx-lib";
+
+const script = new Function('state', `return ${syphonx.script}(state)`) as (state: ExtractState) => ExtractState;
 
 const defaults = {
-    useragent: "Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
+    useragent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
     headers: { "Accept-Language": "en-US,en" },
     viewport: { width: 1366, height: 768 }
 };
@@ -51,7 +60,7 @@ export async function online({ retries = 0, onRetry, ...options}: OnlineOptions)
         result = await tryOnline(options);
         if (result.ok)
             break;
-        if (retry >= retries || result.errors?.some(error => error.level <= 0))
+        if (retry >= retries || result.errors?.some((error: any) => error.level <= 0)) //todo: why is errors of type any?
             break;
         if (onRetry)
             await onRetry({ retry: ++retry, retries, result });
@@ -101,41 +110,64 @@ async function tryOnline({ show = false, pause, includeDOMRefs = false, outputTr
             await page.waitForURL(originalUrl, { timeout, waitUntil });
 
         options.vars.__status = status;
-        await page.evaluate(__jquery);
 
         if (["before", "both"].includes(pause!) && show)
             await prompt("paused, hit enter to continue...");
-    
-        if (options.offline) {
-            const html = await page.evaluate(() => document.querySelector("*")!.outerHTML);
-            const root = cheerio.load(html);
-            const result = await syphonx.extract({ ...options, root, url: originalUrl } as syphonx.ExtractState);
-            return {
-                ...result,
-                ok: result.errors.length === 0,
-                status: 0,
-                online: false,
-                originalUrl,
-                html: root.html(),
-                data: includeDOMRefs ? result.data : removeDOMRefs(result.data)
-            };
-        }
 
-        let html = "";
-        if (!outputTransformedHTML)
+        let html: string | undefined = undefined;
+        if (options.offline)
             html = await page.evaluate(() => document.querySelector("*")!.outerHTML);
 
-        let { url, domain, origin, ...state } = await page.evaluate(syphonx.extract, { ...options as any, originalUrl });
-        while (state.yield) {
-            if (state.yield.params?.waitUntil)
-                await page.waitForLoadState(state.yield.params.waitUntil, { timeout: state.yield.timeout || timeout });
-            await page.evaluate(__jquery);
-            state.yield === undefined;
-            state.vars.__status = status;
-            if (["before", "both"].includes(pause!) && show)
-                await prompt(`paused at step #${state.yield?.step}, hit enter to continue...`);
-            state = await page.evaluate(syphonx.extract, { ...state as any, originalUrl });
-        }
+        const api = new SyphonXApi();
+        const result = await api.run({
+            template: options,
+            url: originalUrl,
+            html,
+            unwrap: !includeDOMRefs,
+            onExtract: async state => {
+                const result = await page!.evaluate<ExtractState, ExtractState>(script, state);
+                return result;
+            },
+            onGoback: async ({ timeout, waitUntil }) => {
+                const response = await page!.goBack({ timeout, waitUntil });
+                const status = response?.status();
+                return { status };
+            },
+            onHtml: async () => {
+                const html = await page!.evaluate(() => document.querySelector("*")!.outerHTML);
+                return html;
+            },
+            onLocator: async ({ frame, selector, method, params }) => {
+                let locator = undefined as playwright.Locator | undefined;
+                if (frame)
+                    locator = await page!.frameLocator(frame).locator(selector);
+                else
+                    locator = await page!.locator(selector);
+        
+                const result = await invokeAsyncMethod(locator, method, params);
+                return result;
+            },
+            onNavigate: async ({ url, timeout, waitUntil }) => {
+                const response = await page!.goto(url, { timeout, waitUntil });
+                const status = response?.status();
+                return { status };
+            },
+            onReload: async ({ timeout, waitUntil }) => {
+                const response = await page!.reload({ timeout, waitUntil });
+                const status = response?.status();
+                return { status };
+            },
+            onScreenshot: async ({ selector, fullPage, ...options }) => {
+                const path = `./screenshots/${new Date().toLocaleString("en-US", { hour12: false }).replace(/:/g, "-").replace(/\//g, "-").replace(/,/g, "")}.png`;
+                let clip: { x: number, y: number, height: number, width: number } | undefined = undefined;
+                if (selector)
+                    clip = await page!.evaluate(() => document.querySelector(selector)?.getBoundingClientRect());
+                await page!.screenshot({ ...options, path, clip, fullPage });
+            },
+            onYield: async ({ timeout, waitUntil }) => {
+                await page!.waitForLoadState(waitUntil, { timeout });
+            }
+        });
 
         if (outputTransformedHTML)
             html = await page.evaluate(() => document.querySelector("*")!.outerHTML);
@@ -144,16 +176,16 @@ async function tryOnline({ show = false, pause, includeDOMRefs = false, outputTr
             await prompt("done, hit enter to continue...");
 
         return {
-            ...omit(state, "actions"),
-            ok: state.errors.length === 0,
+            ...omit(result, "actions"),
+            ok: result.errors.length === 0,
             status,
-            url,
-            domain,
-            origin,
+            url: result.url,
+            domain: result.domain,
+            origin: result.origin,
             originalUrl,
             html,
-            online: true,
-            data: includeDOMRefs ? state.data : removeDOMRefs(state.data)
+            online: !options.offline,
+            data: result.data
         };    
     }
     catch (err) {

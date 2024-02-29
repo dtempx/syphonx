@@ -21,7 +21,7 @@ export default async function (args: Record<string, string>): Promise<void> {
 
     const dataset = args.query.split(".")[0]; // todo: specify dataset in config
     const table = "syphonx"; // todo: specify table in config
-    const query = args.query.includes(" ") ? args.query : `SELECT * FROM ${args.query}`; // extra fields pass as params to syphonx
+    const query = args.query.includes(" ") ? args.query : `SELECT * FROM ${args.query} WHERE url IS NOT NULL`; // extra fields pass as params to syphonx
     const response = await bigquery.query(query);
     const rows = response[0] as QueryResult[];
     console.log(`${rows.length} rows returned from ${args.query}`);
@@ -42,7 +42,7 @@ export default async function (args: Record<string, string>): Promise<void> {
 
     const ok = rows.every(row => {
         const template = templates[row.key];
-        if (!row.key && !template.key)
+        if (!row.key && !(template as any).key) //todo: remove key from template
             return false;
         else if (!row.url && !template.url)
             return false;
@@ -84,7 +84,7 @@ export default async function (args: Record<string, string>): Promise<void> {
             const t1 = new Date().valueOf();
             const { url, ...params } = row;
             const template = templates[row.key];
-            const key = template.key || "default";
+            const key = (template as any).key || "default"; // todo: remove key from template
             const tag = args.tag;
             try {
                 const result = await online({
@@ -120,7 +120,7 @@ export default async function (args: Record<string, string>): Promise<void> {
                 else {
                     skipped += 1;
                     const t2 = new Date().valueOf();
-                    console.log(`[${++i}/${rows.length}] ${url} elapsed=${((t2 - t1) / 1000).toFixed(1)}s SKIPPED\nERROR ${result.errors?.map(error => JSON.stringify(error)).join("\n")}`);
+                    console.log(`[${++i}/${rows.length}] ${url} elapsed=${((t2 - t1) / 1000).toFixed(1)}s SKIPPED\nERROR ${result.errors?.map((error: any) => JSON.stringify(error)).join("\n")}`);
                 }
     
                 if (result.ok) {

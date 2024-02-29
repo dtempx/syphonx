@@ -59,6 +59,8 @@ export function omit<T extends object, K extends [...(keyof T)[]]>(obj: T, ...ke
 }
 
 export function parseUrl(url: string): { domain?: string, origin?: string } {
+    if (url.startsWith("view-source:"))
+        url = url.slice(12);
     if (/^https?:\/\//.test(url)) {
         const [protocol, , host] = url.split("/");
         const a = host.split(":")[0].split(".").reverse();
