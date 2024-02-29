@@ -1,25 +1,22 @@
 {
   "name": "syphonx",
-  "version": "1.2.65",
+  "version": "1.2.66",
   "description": "SyphonX is a tool that extracts data from HTML data, transforming it into JSON of any shape or size. It combines the power of CSS Selectors and jQuery, Regular Expressions, and Javascript into a declarative template format to elegantly solve the simplest to the most complex data extraction problems.",
   "author": "Dave Templin <dtempx@gmail.com> (https://github.com/dtempx/)",
   "homepage": "https://github.com/dtempx/syphonx",
   "repository": "github:dtempx/syphonx",
   "license": "MIT",
   "type": "module",
-  "main": "./dist/index.js",
+  "main": "./index.js",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "types": "./index.d.ts",
+      "import": "./index.js"
     }
   },
   "bin": {
-    "syphonx": "./dist/command.js"
+    "syphonx": "./command.js"
   },
-  "files": [
-    "./dist/"
-  ],
   "scripts": {
     "build": "npx tsc",
     "clean": "bash ./clean.sh",

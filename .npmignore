@@ -1,0 +1,8 @@
+*.sh
+*.txt
+*.md
+.mocharc.yml
+.vscode
+test.*
+examples
+documentation
