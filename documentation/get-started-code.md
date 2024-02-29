@@ -4,16 +4,9 @@
 2. `yarn add syphonx` to install the syphonx dependency
 3. `touch index.js` and add the code below to the file
 ```js
-(async () => {
-    try {
-        const template = await syphonx.fetchTemplate("$/examples/weather.yaml");
-        const result = await syphonx.online(template);
-        console.log(result.data);
-    }
-    catch (err) {
-        console.error(err);
-    }
-})();
+const template = await syphonx.fetchTemplate("$/examples/weather.yaml");
+const result = await syphonx.online(template);
+console.log(result.data);
 ```
 4. `node index.js` to run
 
@@ -22,7 +15,6 @@ This should produce an output similar to the below which is the result of extrac
 ```json
 "Anaheim, CA As of 6:55 pm PST 54° Cloudy Day 67° • Night 49° Cloudy alertLevel2 Gale Warning +6 More"
 ```
-
 
 # More
 * [Extract data from raw HTML offline](get-started-code-2.md)

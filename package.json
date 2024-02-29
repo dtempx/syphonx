@@ -1,28 +1,27 @@
 {
   "name": "syphonx",
-  "version": "1.2.61",
-  "description": "SyphonX is the easiest way to extract data from any website without coding",
+  "version": "1.2.64",
+  "description": "SyphonX is a tool that extracts data from HTML data, transforming it into JSON of any shape or size. It combines the power of CSS Selectors and jQuery, Regular Expressions, and Javascript into a declarative template format to elegantly solve the simplest to the most complex data extraction problems.",
   "author": "Dave Templin <dtempx@gmail.com> (https://github.com/dtempx/)",
   "homepage": "https://github.com/dtempx/syphonx",
   "repository": "github:dtempx/syphonx",
   "license": "MIT",
   "type": "module",
-  "main": "./dist/cjs/index.js",
+  "main": "./dist/index.js",
   "exports": {
     ".": {
-      "types": "./dist/esm/index.d.ts",
-      "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
     }
   },
   "bin": {
-    "syphonx": "./dist/esm/command.js"
+    "syphonx": "./dist/command.js"
   },
   "files": [
     "./dist/"
   ],
   "scripts": {
-    "build": "bash ./build.sh",
+    "build": "npx tsc",
     "clean": "bash ./clean.sh",
     "test": "npx mocha"
   },
@@ -68,7 +67,7 @@
     "json5": "^2.2.1",
     "nanoid": "^4.0.0",
     "parse-full-name": "^1.2.6",
-    "playwright": "^1.31.2",
+    "playwright": "^1.42.0",
     "syphonx-lib": "^1.2.61",
     "typescript": "^4.8.3",
     "word-wrap": "^1.2.3"

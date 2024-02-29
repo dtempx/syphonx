@@ -4,6 +4,8 @@
 ```
 git clone https://github.com/dtempx/syphonx.git
 cd syphonx
+yarn
+npx playwright install
 yarn build
 ```
 
@@ -13,6 +15,7 @@ node command --help
 node command --version
 node command run --help
 node command run $/examples/example.json
+node command run $/examples/weather.yaml
 node command run test.json
 node command run test.json --show
 node command run test.json --show --pause
@@ -34,7 +37,6 @@ node command run examples/google.json
 node command run $/examples/example.json
 ```
 
-
 # Test YAML Templates
 ```
 node command run examples/example.yaml
@@ -50,15 +52,6 @@ node command view $/examples/weather.yaml
 node command view $/examples/weather.yaml --json
 ```
 
-## Symbolic Linking
-1. Run `yarn link` from this project
-2. Run `yarn link syphonx` from other project
-3. Run `npx syphonx --version` to verify
-
-[More info](https://medium.com/@debshish.pal/publish-a-npm-package-locally-for-testing-9a00015eb9fd)
-
-
-
 ## Deploy
 ```
 yarn upgrade syphonx-lib --latest
@@ -68,3 +61,10 @@ yarn test
 npm publish
 ```
 > Publish requires authenticator code
+
+## Symbolic Linking
+1. Run `yarn link` from this project
+2. Run `yarn link syphonx` from other project
+3. Run `npx syphonx --version` to verify
+
+[More info](https://medium.com/@debshish.pal/publish-a-npm-package-locally-for-testing-9a00015eb9fd)
